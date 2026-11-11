@@ -22,8 +22,6 @@ export const Footer: React.FC = () => {
             <p className="text-slate-400 text-xs sm:text-sm leading-relaxed max-w-sm font-normal">
               Creative storytelling. Strategic marketing. Measurable digital growth. Building high-retention social content, authoritative SEO footprints, and conversion-focused digital storefronts.
             </p>
-
-              )}
             </div>
           </div>
 
