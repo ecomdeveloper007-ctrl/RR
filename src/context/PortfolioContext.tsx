@@ -387,7 +387,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       const merged = { ...about, ...data };
       await setDoc(doc(db, 'about', 'main'), merged, { merge: true });
       setAbout(merged);
-      await logAudit('Updated About PJ Section', 'About', 'main');
+      await logAudit('Updated About Patricia Section', 'About', 'main');
       showToast('About section updated successfully!');
     } catch (error) {
       handleFirestoreError(error, OperationType.WRITE, 'about/main', auth.currentUser);
@@ -563,7 +563,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         createdAt: new Date().toISOString(),
       };
       await addDoc(collection(db, 'enquiries'), newEnquiry);
-      showToast('Thank you! Your message has been sent. PJ will reply shortly.', 'success');
+      showToast('Thank you! Your message has been sent. Patricia will reply shortly.', 'success');
     } catch (error) {
       handleFirestoreError(error, OperationType.CREATE, 'enquiries', auth.currentUser);
     }
@@ -620,7 +620,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const result = await seedInitialDataIfNeeded(true);
     setIsLoading(false);
     if (result.seeded) {
-      showToast('Synchronized complete PJ portfolio data with Firestore!');
+      showToast('Synchronized complete Patricia portfolio data with Firestore!');
     } else {
       showToast(`Sync notice: ${result.message}`, 'error');
     }
