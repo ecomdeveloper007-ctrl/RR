@@ -116,7 +116,7 @@ export const HeroSection: React.FC = () => {
                   <img
                     src={
                       hero.profileImageUrl ||
-                      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80'
+                      'https://fiverr-res.cloudinary.com/image/upload/f_auto,q_auto,t_profile_original/v1/attachments/profile/photo/9e7939e1f4ea9eefd97b1622afb2fffc-1775900790435/8274214f-1465-4c61-80e9-a882cf332a8a.png'
                     }
                     alt="Patricia - Social Media Marketing & Digital Growth"
                     className="w-full h-full object-cover object-top"
