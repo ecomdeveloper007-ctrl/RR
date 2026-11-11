@@ -118,12 +118,12 @@ export const HeroSection: React.FC = () => {
                       hero.profileImageUrl ||
                       'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80'
                     }
-                    alt="PJ - Social Media Marketing & Digital Growth"
+                    alt="Patricia - Social Media Marketing & Digital Growth"
                     className="w-full h-full object-cover object-top"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex items-end p-6">
                     <div className="text-white space-y-0.5">
-                      <div className="text-xl font-bold tracking-tight">PJ</div>
+                      <div className="text-xl font-bold tracking-tight"Patricia></div>
                       <div className="text-xs text-emerald-400 font-medium">
                         Creative Storyteller & Digital Growth Strategist
                       </div>
@@ -134,7 +134,7 @@ export const HeroSection: React.FC = () => {
                 {/* Floating pill badge */}
                 <div className="absolute -bottom-4 -left-4 bg-white/95 backdrop-blur-md border border-[#E2E8F0] rounded-2xl p-3 shadow-lg flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-[#10B981] text-white flex items-center justify-center font-bold text-sm">
-                    PJ
+                    Patricia
                   </div>
                   <div>
                     <div className="text-xs font-bold text-[#111827]">Strategic Marketing</div>
