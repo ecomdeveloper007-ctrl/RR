@@ -13,16 +13,16 @@ export const Footer: React.FC = () => {
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-[#10B981] flex items-center justify-center text-[#111827] font-extrabold text-base shadow-lg shadow-emerald-500/20">
-                P
+                PJ
               </div>
               <span className="font-extrabold text-xl text-white tracking-tight">
-                {siteSettings.brandingName || 'Patricia'}
+                {siteSettings.brandingName || 'PJ'}
               </span>
             </div>
             <p className="text-slate-400 text-xs sm:text-sm leading-relaxed max-w-sm font-normal">
               Creative storytelling. Strategic marketing. Measurable digital growth. Building high-retention social content, authoritative SEO footprints, and conversion-focused digital storefronts.
             </p>
-            </div>
+          </div>
 
 
           {/* Quick Navigation */}
