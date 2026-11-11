@@ -1,0 +1,273 @@
+{
+  "entities": {
+    "SiteSettings": {
+      "title": "Site Settings",
+      "description": "Global website configuration, branding, and social links",
+      "type": "object",
+      "properties": {
+        "websiteTitle": { "type": "string", "maxLength": 150 },
+        "brandingName": { "type": "string", "maxLength": 100 },
+        "logoUrl": { "type": "string", "maxLength": 500 },
+        "contactEmail": { "type": "string", "maxLength": 120 },
+        "contactPhone": { "type": "string", "maxLength": 50 },
+        "copyrightText": { "type": "string", "maxLength": 200 },
+        "seoTitle": { "type": "string", "maxLength": 150 },
+        "seoDescription": { "type": "string", "maxLength": 350 },
+        "fiverrUrl": { "type": "string", "maxLength": 300 },
+        "linkedinUrl": { "type": "string", "maxLength": 300 },
+        "instagramUrl": { "type": "string", "maxLength": 300 },
+        "githubUrl": { "type": "string", "maxLength": 300 },
+        "resumeUrl": { "type": "string", "maxLength": 500 }
+      },
+      "required": ["websiteTitle", "brandingName"]
+    },
+    "Hero": {
+      "title": "Hero Section",
+      "description": "Hero introduction, call to actions, and verified statistics",
+      "type": "object",
+      "properties": {
+        "headline": { "type": "string", "maxLength": 250 },
+        "subtitle": { "type": "string", "maxLength": 300 },
+        "description": { "type": "string", "maxLength": 600 },
+        "profileImageUrl": { "type": "string", "maxLength": 500 },
+        "ctaTextWork": { "type": "string", "maxLength": 60 },
+        "ctaUrlWork": { "type": "string", "maxLength": 200 },
+        "ctaTextContact": { "type": "string", "maxLength": 60 },
+        "ctaUrlContact": { "type": "string", "maxLength": 200 },
+        "resumeUrl": { "type": "string", "maxLength": 500 },
+        "yearsIt": { "type": "string", "maxLength": 20 },
+        "yearsPm": { "type": "string", "maxLength": 20 },
+        "projectsDelivered": { "type": "string", "maxLength": 20 },
+        "teamSizeLed": { "type": "string", "maxLength": 20 },
+        "isVisible": { "type": "boolean" }
+      },
+      "required": ["headline", "description"]
+    },
+    "About": {
+      "title": "About Me",
+      "description": "Professional background, career leadership, and competencies",
+      "type": "object",
+      "properties": {
+        "headline": { "type": "string", "maxLength": 200 },
+        "bio": { "type": "string", "maxLength": 3000 },
+        "leadershipSummary": { "type": "string", "maxLength": 1000 },
+        "clientCoordination": { "type": "string", "maxLength": 1000 },
+        "itExperienceYears": { "type": "string", "maxLength": 20 },
+        "pmExperienceYears": { "type": "string", "maxLength": 20 },
+        "isVisible": { "type": "boolean" }
+      },
+      "required": ["headline", "bio"]
+    },
+    "Expertise": {
+      "title": "Professional Expertise",
+      "description": "Areas of core technical and management competence",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 100 },
+        "category": { "type": "string", "maxLength": 60 },
+        "description": { "type": "string", "maxLength": 500 },
+        "iconName": { "type": "string", "maxLength": 50 },
+        "displayOrder": { "type": "number" },
+        "isPublished": { "type": "boolean" }
+      },
+      "required": ["title", "description", "displayOrder", "isPublished"]
+    },
+    "Service": {
+      "title": "Professional Service",
+      "description": "Commercial services offered with deliverables and strategic roadmaps",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 120 },
+        "shortDescription": { "type": "string", "maxLength": 300 },
+        "fullDescription": { "type": "string", "maxLength": 2000 },
+        "iconName": { "type": "string", "maxLength": 50 },
+        "imageUrl": { "type": "string", "maxLength": 500 },
+        "deliverables": { "type": "string", "maxLength": 1500 },
+        "ctaText": { "type": "string", "maxLength": 60 },
+        "ctaUrl": { "type": "string", "maxLength": 250 },
+        "displayOrder": { "type": "number" },
+        "isPublished": { "type": "boolean" }
+      },
+      "required": ["title", "shortDescription", "displayOrder", "isPublished"]
+    },
+    "Project": {
+      "title": "Portfolio Project",
+      "description": "Verified case studies, projects, deliverables, and outcomes",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 150 },
+        "clientName": { "type": "string", "maxLength": 120 },
+        "category": { "type": "string", "maxLength": 80 },
+        "shortSummary": { "type": "string", "maxLength": 400 },
+        "overview": { "type": "string", "maxLength": 2500 },
+        "challenges": { "type": "string", "maxLength": 1500 },
+        "strategy": { "type": "string", "maxLength": 1500 },
+        "results": { "type": "string", "maxLength": 1500 },
+        "technologies": { "type": "string", "maxLength": 300 },
+        "thumbnail": { "type": "string", "maxLength": 500 },
+        "galleryImages": { "type": "string", "maxLength": 2000 },
+        "externalUrl": { "type": "string", "maxLength": 300 },
+        "fiverrUrl": { "type": "string", "maxLength": 300 },
+        "isFeatured": { "type": "boolean" },
+        "displayOrder": { "type": "number" },
+        "isPublished": { "type": "boolean" }
+      },
+      "required": ["title", "category", "shortSummary", "displayOrder", "isPublished"]
+    },
+    "Achievement": {
+      "title": "Achievement",
+      "description": "Leadership milestones and verified operational benchmarks",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 120 },
+        "statNumber": { "type": "string", "maxLength": 30 },
+        "statLabel": { "type": "string", "maxLength": 80 },
+        "description": { "type": "string", "maxLength": 500 },
+        "displayOrder": { "type": "number" },
+        "isPublished": { "type": "boolean" }
+      },
+      "required": ["title", "statNumber", "statLabel", "displayOrder", "isPublished"]
+    },
+    "Resource": {
+      "title": "Educational Resource",
+      "description": "Social Media Starter Guide chapters and best-practice blueprints",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 150 },
+        "category": { "type": "string", "maxLength": 80 },
+        "shortDescription": { "type": "string", "maxLength": 400 },
+        "detailedContent": { "type": "string", "maxLength": 4000 },
+        "keyTakeaways": { "type": "string", "maxLength": 1500 },
+        "pdfUrl": { "type": "string", "maxLength": 500 },
+        "illustrationUrl": { "type": "string", "maxLength": 500 },
+        "displayOrder": { "type": "number" },
+        "isPublished": { "type": "boolean" }
+      },
+      "required": ["title", "category", "shortDescription", "displayOrder", "isPublished"]
+    },
+    "Testimonial": {
+      "title": "Client Testimonial",
+      "description": "Client reviews and feedback from verified collaborations",
+      "type": "object",
+      "properties": {
+        "clientName": { "type": "string", "maxLength": 100 },
+        "designation": { "type": "string", "maxLength": 100 },
+        "company": { "type": "string", "maxLength": 100 },
+        "testimonialText": { "type": "string", "maxLength": 1500 },
+        "rating": { "type": "number" },
+        "avatarUrl": { "type": "string", "maxLength": 500 },
+        "displayOrder": { "type": "number" },
+        "isPublished": { "type": "boolean" }
+      },
+      "required": ["clientName", "testimonialText", "displayOrder", "isPublished"]
+    },
+    "Enquiry": {
+      "title": "Contact Enquiry",
+      "description": "Public enquiries and leads submitted through the contact form",
+      "type": "object",
+      "properties": {
+        "fullName": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "maxLength": 120 },
+        "phone": { "type": "string", "maxLength": 50 },
+        "service": { "type": "string", "maxLength": 100 },
+        "message": { "type": "string", "maxLength": 2000 },
+        "status": { "type": "string", "enum": ["new", "read", "in_progress", "completed", "archived"] },
+        "notes": { "type": "string", "maxLength": 2000 },
+        "createdAt": { "type": "string", "maxLength": 60 }
+      },
+      "required": ["fullName", "email", "message", "status"]
+    },
+    "Media": {
+      "title": "Media Item",
+      "description": "Metadata for uploaded portfolio images and downloadable PDFs",
+      "type": "object",
+      "properties": {
+        "fileName": { "type": "string", "maxLength": 200 },
+        "fileUrl": { "type": "string", "maxLength": 600 },
+        "fileType": { "type": "string", "maxLength": 50 },
+        "fileSize": { "type": "number" },
+        "uploadedBy": { "type": "string", "maxLength": 120 },
+        "createdAt": { "type": "string", "maxLength": 60 }
+      },
+      "required": ["fileName", "fileUrl", "fileType"]
+    },
+    "AdminUser": {
+      "title": "Admin User",
+      "description": "Authorized administrators for the CMS Dashboard",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "maxLength": 120 },
+        "role": { "type": "string", "maxLength": 30 },
+        "createdAt": { "type": "string", "maxLength": 60 }
+      },
+      "required": ["email", "role"]
+    },
+    "AuditLog": {
+      "title": "Audit Log",
+      "description": "Security audit record of admin updates and changes",
+      "type": "object",
+      "properties": {
+        "adminEmail": { "type": "string", "maxLength": 120 },
+        "action": { "type": "string", "maxLength": 100 },
+        "module": { "type": "string", "maxLength": 60 },
+        "recordId": { "type": "string", "maxLength": 100 },
+        "timestamp": { "type": "string", "maxLength": 60 }
+      },
+      "required": ["adminEmail", "action", "module", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/siteSettings/{docId}": {
+      "schema": "SiteSettings",
+      "description": "Global website settings and links"
+    },
+    "/hero/{docId}": {
+      "schema": "Hero",
+      "description": "Hero section content and statistics"
+    },
+    "/about/{docId}": {
+      "schema": "About",
+      "description": "Professional about me biography and background"
+    },
+    "/expertise/{expertiseId}": {
+      "schema": "Expertise",
+      "description": "Professional expertise areas and competencies"
+    },
+    "/services/{serviceId}": {
+      "schema": "Service",
+      "description": "Professional service offerings with deliverables"
+    },
+    "/projects/{projectId}": {
+      "schema": "Project",
+      "description": "Case studies and portfolio items"
+    },
+    "/achievements/{achievementId}": {
+      "schema": "Achievement",
+      "description": "Leadership achievements and verified statistics"
+    },
+    "/resources/{resourceId}": {
+      "schema": "Resource",
+      "description": "Educational guides and Social Media Starter Guide modules"
+    },
+    "/testimonials/{testimonialId}": {
+      "schema": "Testimonial",
+      "description": "Client reviews and endorsements"
+    },
+    "/enquiries/{enquiryId}": {
+      "schema": "Enquiry",
+      "description": "Client contact submissions"
+    },
+    "/media/{mediaId}": {
+      "schema": "Media",
+      "description": "Uploaded media metadata"
+    },
+    "/adminUsers/{userId}": {
+      "schema": "AdminUser",
+      "description": "Registered administrator accounts"
+    },
+    "/auditLogs/{logId}": {
+      "schema": "AuditLog",
+      "description": "Security log of administrative actions"
+    }
+  }
+}

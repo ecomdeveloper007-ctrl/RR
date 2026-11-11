@@ -1,0 +1,23 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Public files (thumbnails, guides, headshots) can be read by all
+    match /public/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null && (
+        request.auth.token.email == 'prakashinfosys1234@gmail.com' ||
+        firestore.exists(/databases/(default)/documents/adminUsers/$(request.auth.uid))
+      );
+    }
+
+    // Default: write only for admin
+    match /{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null && (
+        request.auth.token.email == 'prakashinfosys1234@gmail.com' ||
+        firestore.exists(/databases/(default)/documents/adminUsers/$(request.auth.uid))
+      );
+    }
+  }
+}

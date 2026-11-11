@@ -1,0 +1,136 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128;
+    }
+
+    // Admin verification: primary admin email or registered adminUser document
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'prakashinfosys1234@gmail.com' ||
+        exists(/databases/$(database)/documents/adminUsers/$(request.auth.uid))
+      );
+    }
+
+    function isValidEnquiry(data) {
+      return data.keys().hasAll(['fullName', 'email', 'message', 'status']) &&
+        data.fullName is string && data.fullName.size() >= 2 && data.fullName.size() <= 100 &&
+        data.email is string && data.email.size() >= 5 && data.email.size() <= 120 &&
+        data.message is string && data.message.size() >= 5 && data.message.size() <= 2000 &&
+        data.status is string && (
+          data.status == 'new' ||
+          data.status == 'read' ||
+          data.status == 'in_progress' ||
+          data.status == 'completed' ||
+          data.status == 'archived'
+        );
+    }
+
+    // Public Collections:
+    // Read: open to public visitors (get and list) for website content
+    // Write: restricted strictly to authenticated admins with ID validation
+    match /siteSettings/{docId} {
+      allow read: if true;
+      allow write: if isValidId(docId) && isAdmin();
+    }
+
+    match /hero/{docId} {
+      allow read: if true;
+      allow write: if isValidId(docId) && isAdmin();
+    }
+
+    match /about/{docId} {
+      allow read: if true;
+      allow write: if isValidId(docId) && isAdmin();
+    }
+
+    match /expertise/{expertiseId} {
+      allow read: if true;
+      allow write: if isValidId(expertiseId) && isAdmin();
+    }
+
+    match /services/{serviceId} {
+      allow read: if true;
+      allow write: if isValidId(serviceId) && isAdmin();
+    }
+
+    match /projects/{projectId} {
+      allow read: if true;
+      allow write: if isValidId(projectId) && isAdmin();
+    }
+
+    match /videos/{videoId} {
+      allow read: if true;
+      allow write: if isValidId(videoId) && isAdmin();
+    }
+
+    match /caseStudies/{caseStudyId} {
+      allow read: if true;
+      allow write: if isValidId(caseStudyId) && isAdmin();
+    }
+
+    match /creativeProcess/{processId} {
+      allow read: if true;
+      allow write: if isValidId(processId) && isAdmin();
+    }
+
+    match /achievements/{achievementId} {
+      allow read: if true;
+      allow write: if isValidId(achievementId) && isAdmin();
+    }
+
+    match /resources/{resourceId} {
+      allow read: if true;
+      allow write: if isValidId(resourceId) && isAdmin();
+    }
+
+    match /testimonials/{testimonialId} {
+      allow read: if true;
+      allow write: if isValidId(testimonialId) && isAdmin();
+    }
+
+    match /media/{mediaId} {
+      allow read: if true;
+      allow write: if isValidId(mediaId) && isAdmin();
+    }
+
+    // Contact Enquiries / Messages:
+    // Create: public visitors can submit with validated schema and status == 'new'
+    // Read / Update / Delete: strictly restricted to admin (protects PII)
+    match /enquiries/{enquiryId} {
+      allow create: if isValidId(enquiryId) &&
+        isValidEnquiry(request.resource.data) &&
+        request.resource.data.status == 'new';
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Admin Users
+    match /adminUsers/{userId} {
+      allow read, write: if isValidId(userId) && isAdmin();
+    }
+
+    // Audit Logs: Admin read/create, immutable history
+    match /auditLogs/{logId} {
+      allow read, create: if isAdmin();
+      allow update, delete: if false;
+    }
+
+    // Test connection doc
+    match /test/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}
