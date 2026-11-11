@@ -14,7 +14,7 @@ export const AboutSection: React.FC = () => {
         {/* Section Header */}
         <div className="max-w-3xl mb-16">
           <div className="inline-flex items-center gap-2 text-xs font-bold text-emerald-800 tracking-wider uppercase bg-[#D1FAE5] px-3 py-1 rounded-full border border-emerald-300/60 mb-3">
-            About PJ
+            About Patricia
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-[#111827] tracking-tight">
             {about.headline || 'Creative Storytelling. Strategic Marketing. Measurable Digital Growth.'}
