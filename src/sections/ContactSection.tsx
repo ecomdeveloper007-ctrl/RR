@@ -93,10 +93,10 @@ export const ContactSection: React.FC = () => {
                     Direct Email
                   </div>
                   <a
-                    href={`mailto:${siteSettings.contactEmail || 'prakashinfosys1234@gmail.com'}`}
+                    href={`mailto:${siteSettings.contactEmail || ''}`}
                     className="text-sm font-bold text-[#111827] hover:text-[#10B981] transition-colors"
                   >
-                    {siteSettings.contactEmail || 'prakashinfosys1234@gmail.com'}
+                    {siteSettings.contactEmail || ''}
                   </a>
                   <p className="text-[11px] text-[#64748B] mt-0.5">Average turnaround: &lt; 4 hours</p>
                 </div>
