@@ -66,7 +66,7 @@ export const HeroSection: React.FC = () => {
               </a>
 
               <a
-                href={hero.ctaUrlContact || '#contact'}
+                href={hero.ctaUrlContact || '#'}
                 className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-white text-[#111827] border border-[#E2E8F0] font-semibold text-sm hover:bg-[#F3F7F5] hover:border-slate-300 transition-all duration-200 active:scale-95 shadow-xs"
               >
                 <span>{hero.ctaTextContact || "Let's Discuss Your Project"}</span>
