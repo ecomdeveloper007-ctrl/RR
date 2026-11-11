@@ -169,11 +169,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
         <div className="p-5 border-b border-slate-800 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-[#10B981] text-white flex items-center justify-center font-extrabold text-sm shadow-xs">
-              PJ
+              Patricia
             </div>
             <div>
-              <h2 className="text-sm font-bold text-white tracking-tight">PJ Admin CMS</h2>
-              <p className="text-[10px] text-slate-400">Firebase Cloud Firestore</p>
+              <h2 className="text-sm font-bold text-white tracking-tight">Patricia Admin CMS</h2>
+              <p className="text-[10px] text-slate-400">Backend</p>
             </div>
           </div>
         </div>
@@ -507,7 +507,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose }) => {
           {/* TAB 3: ABOUT MANAGER */}
           {activeTab === 'about' && (
             <div className="max-w-4xl bg-slate-950 p-6 sm:p-8 rounded-2xl border border-slate-800 space-y-6">
-              <h3 className="font-bold text-sm text-white">About PJ Section Content</h3>
+              <h3 className="font-bold text-sm text-white">About Patricia Section Content</h3>
               <div className="space-y-4">
                 <div>
                   <label className="block text-xs font-semibold text-slate-400 mb-1.5">
