@@ -13,10 +13,10 @@ export const Footer: React.FC = () => {
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-[#10B981] flex items-center justify-center text-[#111827] font-extrabold text-base shadow-lg shadow-emerald-500/20">
-                PJ
+                Patricia
               </div>
               <span className="font-extrabold text-xl text-white tracking-tight">
-                {siteSettings.brandingName || 'PJ'}
+                {siteSettings.brandingName || 'Patricia'}
               </span>
             </div>
             <p className="text-slate-400 text-xs sm:text-sm leading-relaxed max-w-sm font-normal">
@@ -25,11 +25,11 @@ export const Footer: React.FC = () => {
 
             <div className="pt-2 space-y-2">
               <a
-                href={`mailto:${siteSettings.contactEmail || 'prakashinfosys1234@gmail.com'}`}
+                href={`mailto:${siteSettings.contactEmail || ''}`}
                 className="inline-flex items-center gap-2 text-xs text-slate-400 hover:text-[#10B981] transition-colors"
               >
                 <Mail className="w-3.5 h-3.5 text-[#10B981]" />
-                <span>{siteSettings.contactEmail || 'prakashinfosys1234@gmail.com'}</span>
+                <span>{siteSettings.contactEmail || ''}</span>
               </a>
               {siteSettings.contactPhone && (
                 <div className="flex items-center gap-2 text-xs text-slate-400">
@@ -53,7 +53,7 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <a href="#about" className="hover:text-[#10B981] transition-colors">
-                  About PJ
+                  About Patricia
                 </a>
               </li>
               <li>
@@ -162,7 +162,7 @@ export const Footer: React.FC = () => {
 
         {/* Bottom copyright row (no admin link or credentials exposed) */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <div>{siteSettings.copyrightText || '© 2026 PJ. All Rights Reserved.'}</div>
+          <div>{siteSettings.copyrightText || '© 2026 Patricia. All Rights Reserved.'}</div>
           <div className="text-slate-500">
             Creative Storytelling &bull; Strategic Marketing &bull; Measurable Digital Growth
           </div>
