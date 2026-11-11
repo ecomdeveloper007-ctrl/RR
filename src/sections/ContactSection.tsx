@@ -147,7 +147,7 @@ export const ContactSection: React.FC = () => {
                 </div>
                 <h3 className="text-2xl font-bold text-[#111827]">Message Received!</h3>
                 <p className="text-sm text-[#64748B] max-w-md mx-auto leading-relaxed">
-                  Thank you for reaching out. Your project details have been sent directly to PJ. You will receive a personalized response shortly.
+                  Thank you for reaching out. Your project details have been sent directly to Patricia. You will receive a personalized response shortly.
                 </p>
                 <button
                   onClick={() => setIsSubmitted(false)}
@@ -285,7 +285,7 @@ export const ContactSection: React.FC = () => {
                   {isSubmitting ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Sending to PJ...</span>
+                      <span>Sending to Patricia...</span>
                     </>
                   ) : (
                     <>
