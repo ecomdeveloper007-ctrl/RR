@@ -23,19 +23,6 @@ export const Footer: React.FC = () => {
               Creative storytelling. Strategic marketing. Measurable digital growth. Building high-retention social content, authoritative SEO footprints, and conversion-focused digital storefronts.
             </p>
 
-            <div className="pt-2 space-y-2">
-              <a
-                href={`mailto:${siteSettings.contactEmail || ''}`}
-                className="inline-flex items-center gap-2 text-xs text-slate-400 hover:text-[#10B981] transition-colors"
-              >
-                <Mail className="w-3.5 h-3.5 text-[#10B981]" />
-                <span>{siteSettings.contactEmail || ''}</span>
-              </a>
-              {siteSettings.contactPhone && (
-                <div className="flex items-center gap-2 text-xs text-slate-400">
-                  <Phone className="w-3.5 h-3.5 text-[#10B981]" />
-                  <span>{siteSettings.contactPhone}</span>
-                </div>
               )}
             </div>
           </div>
@@ -47,16 +34,6 @@ export const Footer: React.FC = () => {
             </h4>
             <ul className="space-y-2.5 text-xs text-slate-400">
               <li>
-                <a href="#home" className="hover:text-[#10B981] transition-colors">
-                  Home
-                </a>
-              </li>
-              <li>
-                <a href="#about" className="hover:text-[#10B981] transition-colors">
-                  About Patricia
-                </a>
-              </li>
-              <li>
                 <a href="#services" className="hover:text-[#10B981] transition-colors">
                   Services
                 </a>
@@ -64,11 +41,6 @@ export const Footer: React.FC = () => {
               <li>
                 <a href="#portfolio" className="hover:text-[#10B981] transition-colors">
                   Portfolio
-                </a>
-              </li>
-              <li>
-                <a href="#guide" className="hover:text-[#10B981] transition-colors">
-                  Social Media Guide
                 </a>
               </li>
               <li>
@@ -130,32 +102,6 @@ export const Footer: React.FC = () => {
                   <ExternalLink className="w-3 h-3" />
                 </a>
               </li>
-              {siteSettings.linkedinUrl && (
-                <li>
-                  <a
-                    href={siteSettings.linkedinUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-between p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-800 hover:text-white border border-slate-700/60 transition-all text-slate-300"
-                  >
-                    <span>LinkedIn</span>
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
-                </li>
-              )}
-              {siteSettings.instagramUrl && (
-                <li>
-                  <a
-                    href={siteSettings.instagramUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-between p-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-800 hover:text-white border border-slate-700/60 transition-all text-slate-300"
-                  >
-                    <span>Instagram</span>
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
-                </li>
-              )}
             </ul>
           </div>
         </div>
