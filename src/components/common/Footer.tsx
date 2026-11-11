@@ -23,7 +23,7 @@ export const Footer: React.FC = () => {
               Creative storytelling. Strategic marketing. Measurable digital growth. Building high-retention social content, authoritative SEO footprints, and conversion-focused digital storefronts.
             </p>
             </div>
-          </div>
+
 
           {/* Quick Navigation */}
           <div>
