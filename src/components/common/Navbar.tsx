@@ -52,7 +52,6 @@ export const Navbar: React.FC = () => {
     { name: 'Videos', href: '#videos' },
     { name: 'Case Studies', href: '#case-studies' },
     { name: 'Testimonials', href: '#testimonials' },
-    { name: 'Contact', href: '#contact' },
   ];
 
   return (
@@ -74,7 +73,7 @@ export const Navbar: React.FC = () => {
           {/* Brand Logo */}
           <a href="#home" className="flex items-center gap-2.5 group text-[#111827]">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#10B981] to-teal-700 flex items-center justify-center text-white font-extrabold text-base shadow-sm shadow-emerald-500/20 group-hover:scale-105 transition-transform">
-              Patricia
+              P
             </div>
             <div className="flex flex-col">
               <span className="font-extrabold text-base sm:text-lg tracking-tight text-[#111827] group-hover:text-[#10B981] transition-colors">
