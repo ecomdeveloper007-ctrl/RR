@@ -9,7 +9,7 @@ const DEFAULT_HERO_IMAGE =
 export const HeroSection: React.FC = () => {
   const { hero, isHeroReady, siteSettings } = usePortfolio();
   const [isImageLoaded, setIsImageLoaded] = useState(false);
- /* const imgRef = useRef<HTMLImageElement | null>(null); */
+ const imgRef = useRef<HTMLImageElement | null>(null); 
 
   const heroImageSrc = isHeroReady
     ? hero.profileImageUrl || DEFAULT_HERO_IMAGE
