@@ -12,7 +12,7 @@ export const HeroSection: React.FC = () => {
 
   const heroImageSrc = isHeroReady
     ? hero.profileImageUrl || DEFAULT_HERO_IMAGE
-    : '';
+    : 'public/images/Neon Green Ring Portrait with Glasses.png';
 
   useEffect(() => {
     if (heroImageSrc && imgRef.current?.complete && imgRef.current.naturalWidth > 0) {
