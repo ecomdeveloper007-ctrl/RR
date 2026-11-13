@@ -21,6 +21,7 @@ import { VideosSection } from './sections/VideosSection';
 import { CaseStudiesSection } from './sections/CaseStudiesSection';
 import { CreativeProcessSection } from './sections/CreativeProcessSection';
 import { TestimonialsSection } from './sections/TestimonialsSection';
+import { FiverrCtaSection } from './sections/FiverrCtaSection';
 import { AdminDashboard } from './admin/AdminDashboard';
 import { AdminLogin } from './admin/AdminLogin';
 import type { ProjectItem, ResourceItem, VideoItem } from './types/portfolio';
@@ -89,6 +90,7 @@ function PortfolioApp() {
         <CaseStudiesSection />
         <CreativeProcessSection />
         <TestimonialsSection />
+        <FiverrCtaSection />
       </main>
 
       {/* Dark Footer with verified links and no admin indicator */}

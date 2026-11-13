@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { X, BookOpen, CheckCircle2, Download, ArrowRight, Sparkles } from 'lucide-react';
+import { X, BookOpen, CheckCircle2, Download, ExternalLink, Sparkles } from 'lucide-react';
 import type { ResourceItem } from '../../types/portfolio';
 
 interface ResourceModalProps {
@@ -48,7 +48,7 @@ export const ResourceModal: React.FC<ResourceModalProps> = ({ resource, onClose 
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
             aria-label="Close guide modal"
           >
             <X className="w-5 h-5" />
@@ -125,12 +125,14 @@ export const ResourceModal: React.FC<ResourceModalProps> = ({ resource, onClose 
               </a>
             ) : (
               <a
-                href="#contact"
+                href="https://www.fiverr.com/pjangid"
+                target="_blank"
+                rel="noopener noreferrer"
                 onClick={onClose}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-slate-900 text-white text-xs font-semibold hover:bg-emerald-600 transition-colors"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#10B981] text-white text-xs font-semibold hover:bg-[#059669] transition-colors"
               >
-                <span>Request Custom Social Strategy</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <span>Order Custom Strategy on Fiverr</span>
+                <ExternalLink className="w-3.5 h-3.5" />
               </a>
             )}
 

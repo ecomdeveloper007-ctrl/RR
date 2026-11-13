@@ -194,3 +194,55 @@ export interface AuditLogItem {
   recordId: string;
   timestamp: string;
 }
+
+export interface FiverrGigItem {
+  id?: string;
+  title: string;
+  description: string;
+  category: string;
+  fiverrUrl: string;
+  buttonLabel: string;
+  imageUrl: string;
+  storagePath?: string;
+  isActive: boolean;
+  isFeatured: boolean;
+  displayOrder: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PaidAdMetricItem {
+  value: string;
+  label: string;
+}
+
+export interface PaidAdCaseStudyItem {
+  id?: string;
+  clientName: string;
+  platform: string;
+  objectiveLabel: string;
+  destinationDisplay: string;
+  destinationUrl: string;
+  achievedSummary: string;
+  heroStatValue: number;
+  heroStatLabel: string;
+  metrics: PaidAdMetricItem[];
+  budgetContext?: string;
+  clientReality: string;
+  howAdsHelped: string;
+  whatThisMeans: string;
+  screenshotUrl?: string;
+  screenshotAlt?: string;
+  screenshotCaption?: string;
+  spotlightCaption?: string;
+  displayOrder: number;
+  isPublished: boolean;
+}
+
+export interface AdGlossaryTermItem {
+  id?: string;
+  term: string;
+  definition: string;
+  displayOrder: number;
+  isPublished: boolean;
+}

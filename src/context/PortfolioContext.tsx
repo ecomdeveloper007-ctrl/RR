@@ -24,12 +24,15 @@ import {
   initialProcessStages,
   initialGuideSubsections,
   initialTestimonials,
+  initialFiverrGigs,
+  initialPaidAdCaseStudies,
+  initialAdGlossaryTerms,
+  seedPaidAdsAndGlossaryIfNeeded,
 } from '../firebase/seed';
 import type {
   SiteSettings,
   HeroData,
   AboutData,
-  ExpertiseItem,
   ServiceItem,
   ProjectItem,
   VideoItem,
@@ -40,6 +43,9 @@ import type {
   EnquiryItem,
   MediaItem,
   AuditLogItem,
+  FiverrGigItem,
+  PaidAdCaseStudyItem,
+  AdGlossaryTermItem,
 } from '../types/portfolio';
 
 interface PortfolioContextType {
@@ -47,7 +53,10 @@ interface PortfolioContextType {
   hero: HeroData;
   about: AboutData;
   services: ServiceItem[];
+  fiverrGigs: FiverrGigItem[];
   projects: ProjectItem[];
+  paidAds: PaidAdCaseStudyItem[];
+  adGlossary: AdGlossaryTermItem[];
   videos: VideoItem[];
   caseStudies: CaseStudyItem[];
   creativeProcess: CreativeProcessItem[];
@@ -57,6 +66,7 @@ interface PortfolioContextType {
   mediaList: MediaItem[];
   auditLogs: AuditLogItem[];
   isLoading: boolean;
+  isHeroReady: boolean;
   isDbConnected: boolean;
   toastMessage: { text: string; type: 'success' | 'error' | 'info' } | null;
   showToast: (text: string, type?: 'success' | 'error' | 'info') => void;
@@ -67,8 +77,14 @@ interface PortfolioContextType {
   updateAbout: (data: Partial<AboutData>) => Promise<void>;
   saveService: (item: ServiceItem) => Promise<void>;
   deleteService: (id: string) => Promise<void>;
+  saveFiverrGig: (item: FiverrGigItem) => Promise<void>;
+  deleteFiverrGig: (id: string) => Promise<void>;
   saveProject: (item: ProjectItem) => Promise<void>;
   deleteProject: (id: string) => Promise<void>;
+  savePaidAd: (item: PaidAdCaseStudyItem) => Promise<void>;
+  deletePaidAd: (id: string) => Promise<void>;
+  saveAdGlossaryTerm: (item: AdGlossaryTermItem) => Promise<void>;
+  deleteAdGlossaryTerm: (id: string) => Promise<void>;
   saveVideo: (item: VideoItem) => Promise<void>;
   deleteVideo: (id: string) => Promise<void>;
   saveCaseStudy: (item: CaseStudyItem) => Promise<void>;
@@ -85,16 +101,35 @@ interface PortfolioContextType {
   addMediaItem: (media: Omit<MediaItem, 'id' | 'createdAt'>) => Promise<void>;
   deleteMediaItem: (id: string) => Promise<void>;
   refreshSeedData: () => Promise<void>;
+  syncPaidAdsDefaults: (force?: boolean) => Promise<void>;
 }
 
 const PortfolioContext = createContext<PortfolioContextType | null>(null);
 
+const HERO_CACHE_KEY = 'pj_cached_hero_v1';
+
+function getCachedHero(): HeroData | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = window.localStorage.getItem(HERO_CACHE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw) as HeroData;
+  } catch {
+    return null;
+  }
+}
+
 export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [cachedHero] = useState<HeroData | null>(() => getCachedHero());
   const [siteSettings, setSiteSettings] = useState<SiteSettings>(initialSiteSettings);
-  const [hero, setHero] = useState<HeroData>(initialHeroData);
+  const [hero, setHero] = useState<HeroData>(() => cachedHero || initialHeroData);
+  const [isHeroReady, setIsHeroReady] = useState<boolean>(() => Boolean(cachedHero));
   const [about, setAbout] = useState<AboutData>(initialAboutData);
   const [services, setServices] = useState<ServiceItem[]>(initialServices);
+  const [fiverrGigs, setFiverrGigs] = useState<FiverrGigItem[]>(initialFiverrGigs);
   const [projects, setProjects] = useState<ProjectItem[]>(initialProjects);
+  const [paidAds, setPaidAds] = useState<PaidAdCaseStudyItem[]>(initialPaidAdCaseStudies);
+  const [adGlossary, setAdGlossary] = useState<AdGlossaryTermItem[]>(initialAdGlossaryTerms);
   const [videos, setVideos] = useState<VideoItem[]>(initialVideos);
   const [caseStudies, setCaseStudies] = useState<CaseStudyItem[]>(initialCaseStudies);
   const [creativeProcess, setCreativeProcess] = useState<CreativeProcessItem[]>(initialProcessStages);
@@ -159,12 +194,30 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       (error) => handleFirestoreError(error, OperationType.GET, 'siteSettings/global', auth.currentUser)
     );
 
+    const heroFallbackTimer = window.setTimeout(() => {
+      if (isMounted) setIsHeroReady(true);
+    }, 3000);
+
     const unsubHero = onSnapshot(
       doc(db, 'hero', 'main'),
       (snap) => {
-        if (snap.exists()) setHero(snap.data() as HeroData);
+        window.clearTimeout(heroFallbackTimer);
+        if (snap.exists()) {
+          const nextHero = snap.data() as HeroData;
+          setHero(nextHero);
+          try {
+            window.localStorage.setItem(HERO_CACHE_KEY, JSON.stringify(nextHero));
+          } catch {
+            // Ignore storage quota errors
+          }
+        }
+        if (isMounted) setIsHeroReady(true);
       },
-      (error) => handleFirestoreError(error, OperationType.GET, 'hero/main', auth.currentUser)
+      (error) => {
+        window.clearTimeout(heroFallbackTimer);
+        if (isMounted) setIsHeroReady(true);
+        handleFirestoreError(error, OperationType.GET, 'hero/main', auth.currentUser);
+      }
     );
 
     const unsubAbout = onSnapshot(
@@ -188,6 +241,21 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         }
       },
       (error) => handleFirestoreError(error, OperationType.LIST, 'services', auth.currentUser)
+    );
+
+    const unsubFiverrGigs = onSnapshot(
+      collection(db, 'fiverr_gigs'),
+      (snap) => {
+        if (!snap.empty) {
+          const items: FiverrGigItem[] = snap.docs.map((d) => ({
+            id: d.id,
+            ...(d.data() as FiverrGigItem),
+          }));
+          items.sort((a, b) => a.displayOrder - b.displayOrder);
+          setFiverrGigs(items);
+        }
+      },
+      (error) => handleFirestoreError(error, OperationType.LIST, 'fiverr_gigs', auth.currentUser)
     );
 
     const unsubProjects = onSnapshot(
@@ -280,18 +348,52 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       (error) => handleFirestoreError(error, OperationType.LIST, 'testimonials', auth.currentUser)
     );
 
+    const unsubPaidAds = onSnapshot(
+      collection(db, 'paid_ads'),
+      (snap) => {
+        if (!snap.empty) {
+          const items: PaidAdCaseStudyItem[] = snap.docs.map((d) => ({
+            id: d.id,
+            ...(d.data() as PaidAdCaseStudyItem),
+          }));
+          items.sort((a, b) => a.displayOrder - b.displayOrder);
+          setPaidAds(items);
+        }
+      },
+      (error) => handleFirestoreError(error, OperationType.LIST, 'paid_ads', auth.currentUser)
+    );
+
+    const unsubAdGlossary = onSnapshot(
+      collection(db, 'ad_glossary'),
+      (snap) => {
+        if (!snap.empty) {
+          const items: AdGlossaryTermItem[] = snap.docs.map((d) => ({
+            id: d.id,
+            ...(d.data() as AdGlossaryTermItem),
+          }));
+          items.sort((a, b) => a.displayOrder - b.displayOrder);
+          setAdGlossary(items);
+        }
+      },
+      (error) => handleFirestoreError(error, OperationType.LIST, 'ad_glossary', auth.currentUser)
+    );
+
     return () => {
       isMounted = false;
+      window.clearTimeout(heroFallbackTimer);
       unsubSettings();
       unsubHero();
       unsubAbout();
       unsubServices();
+      unsubFiverrGigs();
       unsubProjects();
       unsubVideos();
       unsubCaseStudies();
       unsubProcess();
       unsubResources();
       unsubTestimonials();
+      unsubPaidAds();
+      unsubAdGlossary();
     };
   }, []);
 
@@ -375,6 +477,12 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       const merged = { ...hero, ...data };
       await setDoc(doc(db, 'hero', 'main'), merged, { merge: true });
       setHero(merged);
+      setIsHeroReady(true);
+      try {
+        window.localStorage.setItem(HERO_CACHE_KEY, JSON.stringify(merged));
+      } catch {
+        // Ignore storage quota errors
+      }
       await logAudit('Updated Hero Section', 'Hero', 'main');
       showToast('Hero section updated successfully!');
     } catch (error) {
@@ -387,7 +495,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       const merged = { ...about, ...data };
       await setDoc(doc(db, 'about', 'main'), merged, { merge: true });
       setAbout(merged);
-      await logAudit('Updated About Patricia Section', 'About', 'main');
+      await logAudit('Updated About PJ Section', 'About', 'main');
       showToast('About section updated successfully!');
     } catch (error) {
       handleFirestoreError(error, OperationType.WRITE, 'about/main', auth.currentUser);
@@ -417,6 +525,33 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     }
   };
 
+  const saveFiverrGig = async (item: FiverrGigItem) => {
+    try {
+      const id = item.id || `fiverr_gig_${Date.now()}`;
+      const toSave = {
+        ...item,
+        updatedAt: new Date().toISOString(),
+        createdAt: item.createdAt || new Date().toISOString(),
+      };
+      delete toSave.id;
+      await setDoc(doc(db, 'fiverr_gigs', id), toSave);
+      await logAudit(item.id ? 'Edited Fiverr Gig' : 'Added Fiverr Gig', 'Fiverr Gigs', id);
+      showToast('Fiverr Gig saved successfully!');
+    } catch (error) {
+      handleFirestoreError(error, OperationType.WRITE, `fiverr_gigs/${item.id || 'new'}`, auth.currentUser);
+    }
+  };
+
+  const deleteFiverrGig = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, 'fiverr_gigs', id));
+      await logAudit('Deleted Fiverr Gig', 'Fiverr Gigs', id);
+      showToast('Fiverr Gig deleted', 'info');
+    } catch (error) {
+      handleFirestoreError(error, OperationType.DELETE, `fiverr_gigs/${id}`, auth.currentUser);
+    }
+  };
+
   const saveProject = async (item: ProjectItem) => {
     try {
       const id = item.id || `project_${Date.now()}`;
@@ -437,6 +572,52 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       showToast('Project deleted', 'info');
     } catch (error) {
       handleFirestoreError(error, OperationType.DELETE, `projects/${id}`, auth.currentUser);
+    }
+  };
+
+  const savePaidAd = async (item: PaidAdCaseStudyItem) => {
+    try {
+      const id = item.id || `paid_ad_${Date.now()}`;
+      const toSave = { ...item };
+      delete toSave.id;
+      await setDoc(doc(db, 'paid_ads', id), toSave);
+      await logAudit(item.id ? 'Edited Paid Ad Case Study' : 'Added Paid Ad Case Study', 'PaidAds', id);
+      showToast('Paid Ad case study saved successfully!');
+    } catch (error) {
+      handleFirestoreError(error, OperationType.WRITE, `paid_ads/${item.id || 'new'}`, auth.currentUser);
+    }
+  };
+
+  const deletePaidAd = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, 'paid_ads', id));
+      await logAudit('Deleted Paid Ad Case Study', 'PaidAds', id);
+      showToast('Paid Ad case study deleted', 'info');
+    } catch (error) {
+      handleFirestoreError(error, OperationType.DELETE, `paid_ads/${id}`, auth.currentUser);
+    }
+  };
+
+  const saveAdGlossaryTerm = async (item: AdGlossaryTermItem) => {
+    try {
+      const id = item.id || `ad_glossary_${Date.now()}`;
+      const toSave = { ...item };
+      delete toSave.id;
+      await setDoc(doc(db, 'ad_glossary', id), toSave);
+      await logAudit(item.id ? 'Edited Ad Glossary Term' : 'Added Ad Glossary Term', 'AdGlossary', id);
+      showToast('Advertising glossary term saved!');
+    } catch (error) {
+      handleFirestoreError(error, OperationType.WRITE, `ad_glossary/${item.id || 'new'}`, auth.currentUser);
+    }
+  };
+
+  const deleteAdGlossaryTerm = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, 'ad_glossary', id));
+      await logAudit('Deleted Ad Glossary Term', 'AdGlossary', id);
+      showToast('Glossary term removed', 'info');
+    } catch (error) {
+      handleFirestoreError(error, OperationType.DELETE, `ad_glossary/${id}`, auth.currentUser);
     }
   };
 
@@ -563,7 +744,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         createdAt: new Date().toISOString(),
       };
       await addDoc(collection(db, 'enquiries'), newEnquiry);
-      showToast('Thank you! Your message has been sent. Patricia will reply shortly.', 'success');
+      showToast('Thank you! Your message has been sent. PJ will reply shortly.', 'success');
     } catch (error) {
       handleFirestoreError(error, OperationType.CREATE, 'enquiries', auth.currentUser);
     }
@@ -620,7 +801,18 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const result = await seedInitialDataIfNeeded(true);
     setIsLoading(false);
     if (result.seeded) {
-      showToast('Synchronized complete Patricia portfolio data with Firestore!');
+      showToast('Synchronized complete PJ portfolio data with Firestore!');
+    } else {
+      showToast(`Sync notice: ${result.message}`, 'error');
+    }
+  };
+
+  const syncPaidAdsDefaults = async (force = true) => {
+    setIsLoading(true);
+    const result = await seedPaidAdsAndGlossaryIfNeeded(force);
+    setIsLoading(false);
+    if (result.seeded) {
+      showToast('Paid Ads Case Studies & Glossary synchronized with Firestore!');
     } else {
       showToast(`Sync notice: ${result.message}`, 'error');
     }
@@ -633,7 +825,10 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         hero,
         about,
         services,
+        fiverrGigs,
         projects,
+        paidAds,
+        adGlossary,
         videos,
         caseStudies,
         creativeProcess,
@@ -643,6 +838,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         mediaList,
         auditLogs,
         isLoading,
+        isHeroReady,
         isDbConnected,
         toastMessage,
         showToast,
@@ -652,8 +848,14 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         updateAbout,
         saveService,
         deleteService,
+        saveFiverrGig,
+        deleteFiverrGig,
         saveProject,
         deleteProject,
+        savePaidAd,
+        deletePaidAd,
+        saveAdGlossaryTerm,
+        deleteAdGlossaryTerm,
         saveVideo,
         deleteVideo,
         saveCaseStudy,
@@ -670,6 +872,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         addMediaItem,
         deleteMediaItem,
         refreshSeedData,
+        syncPaidAdsDefaults,
       }}
     >
       {children}

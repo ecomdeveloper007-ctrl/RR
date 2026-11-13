@@ -1,22 +1,14 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React from 'react';
+import { motion } from 'motion/react';
 import {
   BookOpen,
   CheckCircle2,
   XCircle,
-  Sparkles,
-  ArrowRight,
-  ShieldAlert,
   Globe,
   Mail,
   MessageCircle,
   Target,
-  CheckSquare,
-  Square,
-  ChevronDown,
-  Layers,
   ArrowUpRight,
-  HelpCircle,
 } from 'lucide-react';
 import { usePortfolio } from '../context/PortfolioContext';
 import type { ResourceItem } from '../types/portfolio';
@@ -28,40 +20,25 @@ interface ResourcesSectionProps {
 export const ResourcesSection: React.FC<ResourcesSectionProps> = ({ onSelectResource }) => {
   const { resources } = usePortfolio();
 
-  // Local interactive checklist states
-  const [checkedItems, setCheckedItems] = useState<Record<number, boolean>>({});
-
-  const toggleChecklist = (idx: number) => {
-    setCheckedItems((prev) => ({ ...prev, [idx]: !prev[idx] }));
-  };
-
-  const monthlyChecklistDefaults = [
-    'Published 20–30 high-value content pieces across selected channels',
-    'Replied to 100% of sincere audience comments and direct messages',
-    'Collected and showcased new customer reviews & project results',
-    'Ran a limited-time seasonal offer or conversion campaign',
-    'Exported and backed up new customer email/WhatsApp leads to private CRM',
-  ];
-
   return (
-    <section id="guide" className="py-20 lg:py-28 bg-white border-t border-slate-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+    <section id="guide" className="py-10 sm:py-12 lg:py-16 bg-white border-t border-slate-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10">
         {/* Section Header */}
         <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 text-xs font-bold text-emerald-800 tracking-wider uppercase bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 mb-3">
+          <div className="inline-flex items-center gap-2 text-xs font-bold text-emerald-800 tracking-wider uppercase bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 mb-2.5">
             <BookOpen className="w-3.5 h-3.5 text-emerald-600" />
             Social Media Starter Guide Playbook
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-[#111827] tracking-tight">
             The Complete 16-Page Social Media Blueprint, Reimagined
           </h2>
-          <p className="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
+          <p className="mt-3 text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
             Step-by-step methodologies on platform mechanics, business growth, content formats, safety standards, and converting followers into paying clients.
           </p>
         </div>
 
         {/* SUBSECTION A: WHAT IS SOCIAL MEDIA & POPULAR PLATFORMS */}
-        <div className="bg-[#F3F7F5] rounded-3xl p-6 sm:p-10 border border-emerald-100 space-y-6">
+        <div className="bg-[#F3F7F5] rounded-3xl p-5 sm:p-7 border border-emerald-100 space-y-5">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100/80 px-2.5 py-0.5 rounded-full">
@@ -100,9 +77,9 @@ export const ResourcesSection: React.FC<ResourcesSectionProps> = ({ onSelectReso
         </div>
 
         {/* SUBSECTIONS B, C, D: HOW IT WORKS, GROWTH FORMULA & BUSINESS VALUE */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
           {/* How Social Media Actually Works */}
-          <div className="bg-white p-7 rounded-3xl border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col justify-between">
             <div>
               <span className="text-xs font-bold uppercase tracking-wider text-emerald-700">
                 Module B &bull; The Mechanics
@@ -192,9 +169,9 @@ export const ResourcesSection: React.FC<ResourcesSectionProps> = ({ onSelectReso
         </div>
 
         {/* SUBSECTION F & G: DO'S AND DON'TS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
           {/* The Do's */}
-          <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-3xl p-7 sm:p-8 space-y-4">
+          <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-3xl p-5 sm:p-6 space-y-4">
             <div className="flex items-center gap-2 text-emerald-900 font-extrabold text-base">
               <CheckCircle2 className="w-5 h-5 text-emerald-600" />
               <span>The Do&apos;s of Social Media (Module F)</span>
@@ -241,7 +218,7 @@ export const ResourcesSection: React.FC<ResourcesSectionProps> = ({ onSelectReso
         </div>
 
         {/* SUBSECTION K: TURNING FOLLOWERS INTO PAYING CUSTOMERS (INTERACTIVE FUNNEL) */}
-        <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-10 space-y-6">
+        <div className="bg-slate-900 text-white rounded-3xl p-5 sm:p-7 space-y-5">
           <div className="max-w-2xl">
             <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
               Module K &bull; The Conversion Engine
@@ -279,9 +256,9 @@ export const ResourcesSection: React.FC<ResourcesSectionProps> = ({ onSelectReso
         </div>
 
         {/* SUBSECTION L & M: WEBSITE AS HOME BASE + MULTICHANNEL CHANNELS */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
           {/* Website Home Base */}
-          <div className="p-7 rounded-3xl bg-[#F3F7F5] border border-emerald-100 space-y-4">
+          <div className="p-5 sm:p-6 rounded-3xl bg-[#F3F7F5] border border-emerald-100 space-y-4">
             <div className="flex items-center gap-2 text-slate-900 font-bold text-base">
               <Globe className="w-5 h-5 text-emerald-600" />
               <span>Website = Your Home Base (Module L)</span>
@@ -352,57 +329,9 @@ export const ResourcesSection: React.FC<ResourcesSectionProps> = ({ onSelectReso
           </div>
         </div>
 
-        {/* SUBSECTION N: INTERACTIVE MONTHLY CHECKLIST */}
-        <div className="p-8 sm:p-10 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-5">
-            <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-emerald-700">
-                Module N &bull; Operational Routine
-              </span>
-              <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mt-1">
-                Interactive Monthly Social Media Checklist
-              </h3>
-            </div>
-            <span className="text-xs text-slate-500 font-medium">
-              Click checkboxes below to audit your monthly marketing discipline
-            </span>
-          </div>
-
-          <div className="space-y-3">
-            {monthlyChecklistDefaults.map((task, idx) => {
-              const isChecked = !!checkedItems[idx];
-              return (
-                <div
-                  key={idx}
-                  onClick={() => toggleChecklist(idx)}
-                  className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-4 ${
-                    isChecked
-                      ? 'bg-emerald-50 border-emerald-300 text-emerald-950 font-medium'
-                      : 'bg-slate-50/70 border-slate-200 text-slate-700 hover:bg-slate-100'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="shrink-0 text-emerald-600">
-                      {isChecked ? (
-                        <CheckSquare className="w-5 h-5 fill-emerald-100" />
-                      ) : (
-                        <Square className="w-5 h-5 text-slate-400" />
-                      )}
-                    </span>
-                    <span className="text-xs sm:text-sm">{task}</span>
-                  </div>
-                  <span className="text-[11px] font-semibold text-slate-500">
-                    {isChecked ? 'Completed' : 'Pending'}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
         {/* Dynamic Starter Guide Chapters Grid */}
-        <div className="pt-8">
-          <div className="flex items-center justify-between mb-8">
+        <div className="pt-2">
+          <div className="flex items-center justify-between mb-5">
             <div>
               <h3 className="text-xl font-bold text-slate-900">
                 Full Chapter Library & Downloads
@@ -413,7 +342,7 @@ export const ResourcesSection: React.FC<ResourcesSectionProps> = ({ onSelectReso
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
             {resources.map((item, idx) => (
               <motion.div
                 key={item.id || idx}

@@ -214,6 +214,64 @@
         "timestamp": { "type": "string", "maxLength": 60 }
       },
       "required": ["adminEmail", "action", "module", "timestamp"]
+    },
+    "FiverrGig": {
+      "title": "Fiverr Gig",
+      "description": "Commercial Fiverr gigs and direct booking offerings",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 150 },
+        "description": { "type": "string", "maxLength": 1000 },
+        "category": { "type": "string", "maxLength": 100 },
+        "fiverrUrl": { "type": "string", "maxLength": 500 },
+        "buttonLabel": { "type": "string", "maxLength": 80 },
+        "imageUrl": { "type": "string", "maxLength": 500 },
+        "storagePath": { "type": "string", "maxLength": 300 },
+        "isActive": { "type": "boolean" },
+        "isFeatured": { "type": "boolean" },
+        "displayOrder": { "type": "number" },
+        "createdAt": { "type": "string", "maxLength": 60 },
+        "updatedAt": { "type": "string", "maxLength": 60 }
+      },
+      "required": ["title", "description", "category", "fiverrUrl", "buttonLabel", "displayOrder", "isActive"]
+    },
+    "PaidAdCaseStudy": {
+      "title": "Paid Ad Case Study",
+      "description": "Meta Ads and Google Ads campaign performance case studies with verified metrics and dashboard screenshots",
+      "type": "object",
+      "properties": {
+        "clientName": { "type": "string", "maxLength": 150 },
+        "platform": { "type": "string", "maxLength": 60 },
+        "objectiveLabel": { "type": "string", "maxLength": 120 },
+        "destinationDisplay": { "type": "string", "maxLength": 200 },
+        "destinationUrl": { "type": "string", "maxLength": 500 },
+        "achievedSummary": { "type": "string", "maxLength": 600 },
+        "heroStatValue": { "type": "number" },
+        "heroStatLabel": { "type": "string", "maxLength": 100 },
+        "budgetContext": { "type": "string", "maxLength": 100 },
+        "clientReality": { "type": "string", "maxLength": 1500 },
+        "howAdsHelped": { "type": "string", "maxLength": 1500 },
+        "whatThisMeans": { "type": "string", "maxLength": 1500 },
+        "screenshotUrl": { "type": "string", "maxLength": 500 },
+        "screenshotAlt": { "type": "string", "maxLength": 200 },
+        "screenshotCaption": { "type": "string", "maxLength": 250 },
+        "spotlightCaption": { "type": "string", "maxLength": 200 },
+        "displayOrder": { "type": "number" },
+        "isPublished": { "type": "boolean" }
+      },
+      "required": ["clientName", "platform", "objectiveLabel", "destinationUrl", "achievedSummary", "heroStatValue", "heroStatLabel", "displayOrder", "isPublished"]
+    },
+    "AdGlossaryTerm": {
+      "title": "Advertising Glossary Term",
+      "description": "Plain-language explanations of paid advertising metrics and terminology",
+      "type": "object",
+      "properties": {
+        "term": { "type": "string", "maxLength": 100 },
+        "definition": { "type": "string", "maxLength": 600 },
+        "displayOrder": { "type": "number" },
+        "isPublished": { "type": "boolean" }
+      },
+      "required": ["term", "definition", "displayOrder", "isPublished"]
     }
   },
   "firestore": {
@@ -237,9 +295,21 @@
       "schema": "Service",
       "description": "Professional service offerings with deliverables"
     },
+    "/fiverr_gigs/{gigId}": {
+      "schema": "FiverrGig",
+      "description": "Official commercial Fiverr gigs and service packages"
+    },
     "/projects/{projectId}": {
       "schema": "Project",
       "description": "Case studies and portfolio items"
+    },
+    "/paid_ads/{adId}": {
+      "schema": "PaidAdCaseStudy",
+      "description": "Paid advertising campaign performance case studies"
+    },
+    "/ad_glossary/{termId}": {
+      "schema": "AdGlossaryTerm",
+      "description": "Advertising metrics glossary terms"
     },
     "/achievements/{achievementId}": {
       "schema": "Achievement",

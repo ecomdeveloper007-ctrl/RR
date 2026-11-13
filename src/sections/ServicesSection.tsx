@@ -1,169 +1,213 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import {
-  FileText,
-  PenTool,
-  Share2,
-  Link,
-  Target,
-  ShoppingBag,
-  CheckCircle2,
+  ExternalLink,
   ArrowUpRight,
-  ChevronDown,
-  Sparkles,
+  ShieldCheck,
 } from 'lucide-react';
 import { usePortfolio } from '../context/PortfolioContext';
-
-const serviceIconMap: Record<string, React.ElementType> = {
-  FileText,
-  PenTool,
-  Share2,
-  Link,
-  Target,
-  ShoppingBag,
-};
+import { initialFiverrGigs } from '../firebase/seed';
+import type { FiverrGigItem } from '../types/portfolio';
 
 export const ServicesSection: React.FC = () => {
-  const { services } = usePortfolio();
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const { fiverrGigs, siteSettings } = usePortfolio();
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
-  const publishedServices = services.filter((s) => s.isPublished);
+  // Use Firestore gigs or fallback to initial gigs
+  const activeGigs: FiverrGigItem[] = (
+    fiverrGigs && fiverrGigs.length > 0 ? fiverrGigs : initialFiverrGigs
+  ).filter((gig) => gig.isActive !== false);
 
-  const toggleExpand = (id: string) => {
-    setExpandedId((prev) => (prev === id ? null : id));
-  };
+  const categories = [
+    'All',
+    ...Array.from(new Set(activeGigs.map((g) => g.category))),
+  ];
+
+  const filteredGigs =
+    selectedCategory === 'All'
+      ? activeGigs
+      : activeGigs.filter((g) => g.category === selectedCategory);
+
+  const fiverrProfileUrl = siteSettings.fiverrUrl || 'https://www.fiverr.com/pjangid';
 
   return (
-    <section id="services" className="py-20 lg:py-28 bg-white border-t border-slate-100">
+    <section id="services" className="py-10 sm:py-12 lg:py-16 bg-[#F3F7F5] border-t border-[#E2E8F0]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="max-w-3xl mb-16">
-          <div className="inline-flex items-center gap-2 text-xs font-bold text-emerald-800 tracking-wider uppercase bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 mb-3">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-            Specialized Professional Services
+        <div className="flex flex-col gap-4 sm:gap-5 mb-7 sm:mb-9">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4 lg:gap-8">
+            <div className="max-w-3xl">
+              <div className="flex items-center gap-2 text-xs font-semibold text-emerald-700 mb-3 tabular-nums">
+                <span>Explore My Services</span>
+                <span aria-hidden="true" className="text-slate-400">·</span>
+                <span className="text-[#64748B] font-medium">
+                  {activeGigs.length} Specialized Fiverr Gigs
+                </span>
+              </div>
+              <h2 className="text-2xl sm:text-4xl lg:text-[2.75rem] font-extrabold text-[#111827] tracking-tight leading-[1.15] [text-wrap:balance]">
+                Everything You Need to Build, Grow and Strengthen Your Digital Presence.
+              </h2>
+              <p className="mt-3.5 text-sm sm:text-base lg:text-lg text-[#64748B] leading-relaxed font-normal max-w-2xl">
+                From social media content and digital marketing to SEO and Shopify website development, explore my services and find the right solution for your business.
+              </p>
+            </div>
+
+            <div className="flex items-center justify-between lg:flex-col lg:items-end gap-2 pt-1 lg:pt-0 shrink-0 text-xs">
+              <span className="text-[#64748B] font-medium tabular-nums">
+                Showing {filteredGigs.length} of {activeGigs.length} services
+              </span>
+              <a
+                href={fiverrProfileUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 font-semibold text-[#059669] hover:text-[#111827] transition-colors whitespace-nowrap min-h-[40px] lg:min-h-0"
+              >
+                <span>View My Fiverr Profile</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </a>
+            </div>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#111827] tracking-tight">
-            Six Strategic Services Engineered for Measurable Digital Outcomes
-          </h2>
-          <p className="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed">
-            Formulated from verified execution methodologies in our Social Media & Growth Playbooks. Every deliverable is designed to solve critical bottlenecks and generate tangible ROI.
-          </p>
+
+          {/* Category Filter Tabs: Horizontal swipe on mobile/tablet, clean wrap on desktop */}
+          <div
+            role="tablist"
+            aria-label="Filter services by category"
+            className="flex items-center gap-1.5 p-1.5 bg-white rounded-2xl border border-[#E2E8F0] overflow-x-auto no-scrollbar max-w-full lg:w-fit lg:flex-wrap"
+          >
+            {categories.map((cat) => {
+              const count =
+                cat === 'All'
+                  ? activeGigs.length
+                  : activeGigs.filter((g) => g.category === cat).length;
+              const isSelected = selectedCategory === cat;
+
+              return (
+                <button
+                  key={cat}
+                  role="tab"
+                  aria-selected={isSelected}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`min-h-[44px] sm:min-h-[40px] px-3.5 sm:px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap shrink-0 transition-all duration-150 flex items-center gap-1.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#10B981] ${
+                    isSelected
+                      ? 'bg-[#10B981] text-white'
+                      : 'text-[#64748B] hover:text-[#111827] hover:bg-slate-50'
+                  }`}
+                >
+                  <span>{cat}</span>
+                  <span
+                    className={`tabular-nums text-[11px] font-medium ${
+                      isSelected ? 'text-emerald-100' : 'text-slate-400'
+                    }`}
+                  >
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        {/* 6 Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {publishedServices.map((service, idx) => {
-            const IconComp = serviceIconMap[service.iconName] || ShoppingBag;
-            const isExpanded = expandedId === (service.id || String(idx));
-            const deliverables = service.deliverables
-              ? service.deliverables.split('\n').map((d) => d.trim()).filter(Boolean)
-              : [];
+        {/* 7 Fiverr Gigs Grid: 3 cols desktop, 2 cols tablet, 1 col mobile */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+          {filteredGigs.map((gig, idx) => (
+            <motion.div
+              key={gig.id || idx}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.4, delay: idx * 0.08 }}
+              whileHover={{ y: -6 }}
+              className="bg-white rounded-3xl border border-[#E2E8F0] shadow-sm hover:shadow-xl hover:border-emerald-300 transition-all duration-300 flex flex-col justify-between overflow-hidden group"
+            >
+              <div>
+                {/* Visual Header with Hover Zoom */}
+                <div className="relative h-52 w-full bg-slate-900 overflow-hidden">
+                  <img
+                    src={gig.imageUrl}
+                    alt={gig.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent" />
 
-            return (
-              <motion.div
-                key={service.id || idx}
-                whileHover={{ y: -4 }}
-                transition={{ duration: 0.2 }}
-                className="bg-white rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-emerald-300 transition-all flex flex-col justify-between overflow-hidden group"
-              >
-                {/* Service Card Top */}
-                <div>
-                  {/* Image banner if present */}
-                  {service.imageUrl && (
-                    <div className="relative h-44 w-full bg-slate-900 overflow-hidden">
-                      <img
-                        src={service.imageUrl}
-                        alt={service.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
-                      <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white">
-                        <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-600/90 backdrop-blur-sm">
-                          Service #{idx + 1}
-                        </span>
-                      </div>
-                    </div>
-                  )}
+                  {/* Category Badge */}
+                  <div className="absolute top-4 left-4">
+                    <span className="text-[11px] font-bold px-3 py-1 rounded-full bg-white/95 text-emerald-800 border border-emerald-200/80 backdrop-blur-md shadow-xs uppercase tracking-wider">
+                      {gig.category}
+                    </span>
+                  </div>
 
-                  <div className="p-6 sm:p-7 space-y-4">
-                    {/* Icon and Category */}
-                    {!service.imageUrl && (
-                      <div className="flex items-center justify-between">
-                        <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100 group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-200 shadow-sm">
-                          <IconComp className="w-6 h-6" />
-                        </div>
-                        <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600">
-                          0{idx + 1}
-                        </span>
-                      </div>
-                    )}
+                  {/* Verified Fiverr Tag */}
+                  <div className="absolute top-4 right-4">
+                    <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-slate-950/80 text-emerald-300 border border-emerald-700/60 backdrop-blur-md flex items-center gap-1 shadow-xs">
+                      <ShieldCheck className="w-3 h-3 text-emerald-400" />
+                      <span>Fiverr Verified</span>
+                    </span>
+                  </div>
 
-                    <h3 className="text-lg sm:text-xl font-bold text-slate-900 group-hover:text-emerald-700 transition-colors leading-snug">
-                      {service.title}
-                    </h3>
-
-                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
-                      {service.shortDescription}
-                    </p>
-
-                    {/* Expandable deliverables and full details */}
-                    <AnimatePresence>
-                      {isExpanded && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.3 }}
-                          className="pt-2 space-y-3 overflow-hidden"
-                        >
-                          <div className="text-xs text-slate-600 bg-slate-50 p-3.5 rounded-xl border border-slate-200/70 leading-relaxed">
-                            {service.fullDescription}
-                          </div>
-
-                          {deliverables.length > 0 && (
-                            <div className="space-y-1.5 pt-1">
-                              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                                Exact Deliverables:
-                              </span>
-                              {deliverables.map((d, dIdx) => (
-                                <div key={dIdx} className="flex items-start gap-2 text-xs text-slate-700">
-                                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                                  <span>{d}</span>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                  {/* Title Preview on image bottom */}
+                  <div className="absolute bottom-3 left-4 right-4 text-white">
+                    <span className="text-[10px] font-medium text-emerald-300 uppercase tracking-widest block mb-0.5">
+                      Service Offering 0{idx + 1}
+                    </span>
                   </div>
                 </div>
 
-                {/* Service Card Bottom Actions */}
-                <div className="px-6 pb-6 pt-2 border-t border-slate-100/80 flex items-center justify-between gap-3">
-                  <button
-                    onClick={() => toggleExpand(service.id || String(idx))}
-                    className="text-xs font-semibold text-slate-500 hover:text-emerald-700 flex items-center gap-1 transition-colors"
-                  >
-                    <span>{isExpanded ? 'Show Less' : 'View Deliverables'}</span>
-                    <ChevronDown
-                      className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                        isExpanded ? 'rotate-180' : ''
-                      }`}
-                    />
-                  </button>
+                {/* Card Content Body */}
+                <div className="p-6 sm:p-7 space-y-3">
+                  <h3 className="text-lg sm:text-xl font-bold text-[#111827] group-hover:text-emerald-700 transition-colors leading-snug">
+                    {gig.title}
+                  </h3>
+
+                  <p className="text-xs sm:text-sm text-[#64748B] leading-relaxed font-normal min-h-[4.5rem]">
+                    {gig.description}
+                  </p>
+                </div>
+              </div>
+
+              {/* Card Bottom CTA */}
+              <div className="p-6 pt-0">
+                <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+                    <span className="w-2 h-2 rounded-full bg-[#10B981]" />
+                    <span>Order on Fiverr</span>
+                  </div>
 
                   <a
-                    href={service.ctaUrl || '#contact'}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-semibold hover:bg-emerald-600 shadow-sm transition-all active:scale-95"
+                    href={gig.fiverrUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="min-h-[44px] inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#10B981] text-white text-xs font-semibold hover:bg-[#059669] shadow-sm shadow-emerald-500/20 hover:shadow-md transition-all active:scale-95 group/btn"
                   >
-                    <span>{service.ctaText || 'Inquire Now'}</span>
-                    <ArrowUpRight className="w-3.5 h-3.5" />
+                    <span>{gig.buttonLabel || 'Explore Service'}</span>
+                    <ArrowUpRight className="w-3.5 h-3.5 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
                   </a>
                 </div>
-              </motion.div>
-            );
-          })}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Global Hire Me Banner */}
+        <div className="mt-8 sm:mt-10 p-5 sm:p-7 rounded-3xl bg-white border border-[#E2E8F0] shadow-sm flex flex-col md:flex-row items-center justify-between gap-5">
+          <div className="space-y-1 max-w-2xl text-center md:text-left">
+            <h4 className="text-xl sm:text-2xl font-bold text-[#111827] tracking-tight">
+              Looking for a Custom Package or Ongoing Digital Retainer?
+            </h4>
+            <p className="text-xs sm:text-sm text-[#64748B]">
+              Directly request a custom offer or consultation through my verified Fiverr Pro profile with full escrow protection.
+            </p>
+          </div>
+
+          <a
+            href={fiverrProfileUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full md:w-auto min-h-[48px] inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-[#111827] text-white text-xs sm:text-sm font-semibold hover:bg-[#10B981] shadow-md transition-all active:scale-95 shrink-0"
+          >
+            <span>Hire Me on Fiverr</span>
+            <ExternalLink className="w-4 h-4" />
+          </a>
         </div>
       </div>
     </section>

@@ -11,23 +11,26 @@ import type {
   CreativeProcessItem,
   ResourceItem,
   TestimonialItem,
+  FiverrGigItem,
+  PaidAdCaseStudyItem,
+  AdGlossaryTermItem,
 } from '../types/portfolio';
 
 export const initialSiteSettings: SiteSettings = {
-  websiteTitle: 'PJ | Premium Social Media Marketing & Digital Growth Portfolio',
-  brandingName: 'PJ',
+  websiteTitle: 'Patricia | Strategic Project Management & Digital Portfolio',
+  brandingName: 'Patricia',
   logoUrl: '',
   contactEmail: 'prakashinfosys1234@gmail.com',
-  contactPhone: '+1 (555) 019-2834',
-  copyrightText: '© 2026 PJ. All Rights Reserved.',
-  seoTitle: 'PJ - Social Media Marketing, Strategic Growth & Digital Solutions',
+  contactPhone: '',
+  copyrightText: '© 2026 Patricia. All Rights Reserved.',
+  seoTitle: 'Patricia - Strategic Project Management, Digital Marketing & Fiverr Services',
   seoDescription:
-    'Creative storytelling. Strategic marketing. Measurable digital growth. Discover high-converting social campaigns, Shopify engineering, and SEO authority by PJ.',
+    'Creative storytelling. Strategic marketing. Measurable digital growth. Discover high-converting social campaigns, Shopify engineering, and Fiverr gig services by Patricia.',
   fiverrUrl: 'https://www.fiverr.com/pjangid',
   linkedinUrl: 'https://www.linkedin.com',
   instagramUrl: 'https://www.instagram.com',
   githubUrl: 'https://github.com',
-  resumeUrl: '#contact',
+  resumeUrl: 'https://www.fiverr.com/pjangid',
 };
 
 export const initialHeroData: HeroData = {
@@ -38,9 +41,9 @@ export const initialHeroData: HeroData = {
   profileImageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80',
   ctaTextWork: 'Explore My Work',
   ctaUrlWork: '#portfolio',
-  ctaTextContact: "Let's Discuss Your Project",
-  ctaUrlContact: '#contact',
-  resumeUrl: '#contact',
+  ctaTextContact: 'Hire Me on Fiverr',
+  ctaUrlContact: 'https://www.fiverr.com/pjangid',
+  resumeUrl: 'https://www.fiverr.com/pjangid',
   yearsIt: '10+',
   yearsPm: '5+',
   projectsDelivered: '120+',
@@ -81,7 +84,7 @@ export const initialServices: ServiceItem[] = [
     benefits:
       'Consistent daily brand visibility\nAccelerated follower-to-customer conversion\nZero algorithmic distribution penalties',
     ctaText: 'Start Social Growth',
-    ctaUrl: '#contact',
+    ctaUrl: 'https://www.fiverr.com/pjangid',
     displayOrder: 1,
     isPublished: true,
   },
@@ -97,7 +100,7 @@ export const initialServices: ServiceItem[] = [
     benefits:
       'High-ranking organic search visibility\nCompelling brand positioning\nLower customer acquisition costs',
     ctaText: 'Commission Content',
-    ctaUrl: '#contact',
+    ctaUrl: 'https://www.fiverr.com/pjangid',
     displayOrder: 2,
     isPublished: true,
   },
@@ -113,7 +116,7 @@ export const initialServices: ServiceItem[] = [
     benefits:
       'Permanent domain authority growth\nProtection from Google updates\nCompound referral and search traffic',
     ctaText: 'Boost Authority',
-    ctaUrl: '#contact',
+    ctaUrl: 'https://www.fiverr.com/pjangid',
     displayOrder: 3,
     isPublished: true,
   },
@@ -129,7 +132,7 @@ export const initialServices: ServiceItem[] = [
     benefits:
       'Predictable lead & customer acquisition\nElimination of wasted ad spend\nGranular conversion tracking',
     ctaText: 'Launch Meta Ads',
-    ctaUrl: '#contact',
+    ctaUrl: 'https://www.fiverr.com/pjangid',
     displayOrder: 4,
     isPublished: true,
   },
@@ -145,7 +148,7 @@ export const initialServices: ServiceItem[] = [
     benefits:
       'Higher average order value & checkout rate\nSub-second mobile loading speed\nFrictionless customer purchase journey',
     ctaText: 'Build Modern Store',
-    ctaUrl: '#contact',
+    ctaUrl: 'https://www.fiverr.com/pjangid',
     displayOrder: 5,
     isPublished: true,
   },
@@ -161,9 +164,124 @@ export const initialServices: ServiceItem[] = [
     benefits:
       'Institutional credibility before investors\nCrystal-clear commercial execution path\nAccurate revenue and margin forecasting',
     ctaText: 'Request Business Plan',
-    ctaUrl: '#contact',
+    ctaUrl: 'https://www.fiverr.com/pjangid',
     displayOrder: 6,
     isPublished: true,
+  },
+];
+
+export const initialFiverrGigs: FiverrGigItem[] = [
+  {
+    title: 'SEO Website Content Writing',
+    description:
+      'Professional SEO-focused website content designed to improve content quality, communicate your brand message, and support organic search visibility.',
+    category: 'SEO & Content Writing',
+    buttonLabel: 'Explore SEO Content Service',
+    fiverrUrl:
+      'https://www.fiverr.com/pjangid/write-your-seo-website-content?ref_ctx_id=ff8752523ab5440b948f4c71afcc2398&pckg_id=1&source=seller_page',
+    imageUrl:
+      'https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=800&q=80',
+    isActive: true,
+    isFeatured: true,
+    displayOrder: 1,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    title: 'Social Media Content Creator & Marketing Manager',
+    description:
+      'Creative social media content and marketing management to help businesses build their online presence, maintain consistency, and engage their target audience.',
+    category: 'Social Media Marketing',
+    buttonLabel: 'Explore Social Media Service',
+    fiverrUrl:
+      'https://www.fiverr.com/pjangid/social-media-content-creator-and-marketing-manager?ref_ctx_id=ff8752523ab5440b948f4c71afcc2398&pckg_id=1&source=seller_page',
+    imageUrl:
+      'https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&q=80',
+    isActive: true,
+    isFeatured: true,
+    displayOrder: 2,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    title: 'Shopify Store Design & Dropshipping Website',
+    description:
+      'Professional Shopify store design and dropshipping website solutions focused on creating a modern shopping experience and a conversion-friendly store.',
+    category: 'Shopify & Website Development',
+    buttonLabel: 'Explore Shopify Service',
+    fiverrUrl:
+      'https://www.fiverr.com/pjangid/shopify-store-design-or-shopify-dropshipping-website?ref_ctx_id=ff8752523ab5440b948f4c71afcc2398&pckg_id=1&source=seller_page',
+    imageUrl:
+      'https://images.unsplash.com/photo-1522204523234-8729aa6e3d5f?auto=format&fit=crop&w=800&q=80',
+    isActive: true,
+    isFeatured: true,
+    displayOrder: 3,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    title: 'Facebook & Instagram Ads Setup',
+    description:
+      'Meta advertising setup to help businesses reach relevant audiences and support their sales, lead generation, and brand awareness objectives.',
+    category: 'Paid Advertising',
+    buttonLabel: 'Explore Meta Ads Service',
+    fiverrUrl:
+      'https://www.fiverr.com/pjangid/set-up-your-facebook-and-instagram-ads?ref_ctx_id=ff8752523ab5440b948f4c71afcc2398&pckg_id=1&source=seller_page',
+    imageUrl:
+      'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80',
+    isActive: true,
+    isFeatured: true,
+    displayOrder: 4,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    title: 'Digital Marketing & Social Media Promotion',
+    description:
+      'Digital marketing and social media promotion solutions to strengthen online visibility, create engaging content, and support business growth.',
+    category: 'Digital Marketing',
+    buttonLabel: 'Explore Digital Marketing Service',
+    fiverrUrl:
+      'https://www.fiverr.com/pjangid/digital-marketing-social-media-promotion-social-media-content-creator-instagram?ref_ctx_id=ff8752523ab5440b948f4c71afcc2398&pckg_id=1&source=seller_page',
+    imageUrl:
+      'https://images.unsplash.com/photo-1557838923-2985c318be48?auto=format&fit=crop&w=800&q=80',
+    isActive: true,
+    isFeatured: true,
+    displayOrder: 5,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    title: 'SEO Backlinks to Improve Domain Rating & Google Rankings',
+    description:
+      'SEO backlink services focused on improving website authority and supporting organic search visibility through backlink campaigns.',
+    category: 'SEO & Link Building',
+    buttonLabel: 'Explore Backlink Service',
+    fiverrUrl:
+      'https://www.fiverr.com/pjangid/seo-backlinks-to-increase-domain-rating-for-google-ranking?ref_ctx_id=ff8752523ab5440b948f4c71afcc2398&pckg_id=1&source=seller_page',
+    imageUrl:
+      'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80',
+    isActive: true,
+    isFeatured: true,
+    displayOrder: 6,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    title: 'High DA Manual SEO Backlinks Campaign',
+    description:
+      'Manual SEO backlink campaigns with AI-optimised keyword support to help strengthen backlink profiles and improve search visibility.',
+    category: 'SEO & Link Building',
+    buttonLabel: 'Explore SEO Backlink Campaign',
+    fiverrUrl:
+      'https://www.fiverr.com/pjangid/high-da-manual-seo-backlinks-campaign-with-ai-optimized-keywords?ref_ctx_id=ff8752523ab5440b948f4c71afcc2398&pckg_id=1&source=seller_page',
+    imageUrl:
+      'https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?auto=format&fit=crop&w=800&q=80',
+    isActive: true,
+    isFeatured: true,
+    displayOrder: 7,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
 ];
 
@@ -630,6 +748,292 @@ export const initialTestimonials: TestimonialItem[] = [
   },
 ];
 
+export const initialPaidAdCaseStudies: PaidAdCaseStudyItem[] = [
+  {
+    clientName: 'Sherria Cotton',
+    platform: 'Meta Ads',
+    objectiveLabel: 'Lead generation campaign',
+    destinationDisplay: 'sherria-cotton.mykajabi.com/becoming-her',
+    destinationUrl: 'https://sherria-cotton.mykajabi.com/becoming-her',
+    achievedSummary:
+      'A lead campaign for the Becoming Her program produced a high volume of reported lead results on a controlled daily budget.',
+    heroStatValue: 9357,
+    heroStatLabel: 'reported lead results',
+    metrics: [
+      { value: '$0.03', label: 'Cost per result' },
+      { value: '$276.04', label: 'Amount spent' },
+      { value: '34,729', label: 'Impressions' },
+      { value: '24,570', label: 'Reach' },
+    ],
+    budgetContext: '$20 daily budget',
+    clientReality:
+      'A transformational offer usually needs a low-pressure first step before someone is ready to explore the full program.',
+    howAdsHelped:
+      'The lead-focused path gave interested people a simple way to raise their hand, reporting 9,357 lead results at $0.03 per result on a $20 daily budget.',
+    whatThisMeans:
+      'Strong top-of-funnel response — a large pool of people the brand can now nurture toward the program.',
+    screenshotUrl: '/images/ads/sherria-cotton-meta-ads.png',
+    screenshotAlt: 'Sherria Cotton Meta Ads dashboard',
+    screenshotCaption: 'Campaign dashboard screenshot supplied by the campaign manager',
+    displayOrder: 1,
+    isPublished: true,
+  },
+  {
+    clientName: 'Lull Ritual',
+    platform: 'Meta Ads',
+    objectiveLabel: 'Website leads campaign',
+    destinationDisplay: 'lullritual.com',
+    destinationUrl: 'https://lullritual.com',
+    achievedSummary:
+      'A website-lead campaign introduced a melatonin-free, non-sedating evening ritual to people looking for a deliberate way to wind down.',
+    heroStatValue: 845,
+    heroStatLabel: 'website leads',
+    metrics: [
+      { value: '$2.81', label: 'Cost per lead' },
+      { value: '$2,374.25', label: 'Amount spent' },
+      { value: '51,478', label: 'Impressions' },
+      { value: '21,265', label: 'Reach' },
+    ],
+    budgetContext: '',
+    clientReality:
+      'A newer wellness category needs explanation and trust before people see why this ritual is different from a traditional sleep product.',
+    howAdsHelped:
+      "A low-friction lead entry point generated 845 website leads while putting Lull's close-the-day positioning in front of a relevant audience.",
+    whatThisMeans:
+      'An audience of interested prospects the brand can now educate and guide toward a purchase or subscription.',
+    screenshotUrl: '/images/ads/lull-ritual-meta-ads.png',
+    screenshotAlt: 'Lull Ritual Meta Ads dashboard',
+    screenshotCaption: 'Campaign dashboard screenshot supplied by the campaign manager',
+    displayOrder: 2,
+    isPublished: true,
+  },
+  {
+    clientName: 'Lisa Bennings Transformation',
+    platform: 'Meta Ads',
+    objectiveLabel: 'Traffic campaigns',
+    destinationDisplay: 'instagram.com/lisabenningstransformation',
+    destinationUrl: 'https://instagram.com/lisabenningstransformation',
+    achievedSummary:
+      'Two traffic campaigns supported both Instagram discovery and visits to a channel landing page.',
+    heroStatValue: 1954,
+    heroStatLabel: 'landing page views',
+    metrics: [
+      { value: '4,739', label: 'Profile & page visits' },
+      { value: '$0.29', label: 'Cost per profile visit' },
+      { value: '$0.35', label: 'Cost per landing view' },
+      { value: '$2,042.81', label: 'Combined spend' },
+    ],
+    budgetContext: 'Two separate traffic campaigns',
+    clientReality:
+      'For a personal brand, attention has to become a reliable path to owned content, a channel, or the next conversion step.',
+    howAdsHelped:
+      'The campaigns separated discovery from destination traffic: one grew profile visibility, the other delivered 1,954 landing-page views at $0.35 each.',
+    whatThisMeans:
+      'A practical audience journey — people first get to know the brand, then move to a page where the relationship continues beyond the feed.',
+    screenshotUrl: '/images/ads/lisa-bennings-meta-ads.png',
+    screenshotAlt: 'Lisa Bennings Transformation Meta Ads dashboard',
+    screenshotCaption: 'Campaign dashboard screenshot supplied by the campaign manager',
+    displayOrder: 3,
+    isPublished: true,
+  },
+  {
+    clientName: 'Naked Truth BARE Project',
+    platform: 'Meta Ads',
+    objectiveLabel: 'Active traffic campaign',
+    destinationDisplay: 'nkdtruth.com',
+    destinationUrl: 'https://nkdtruth.com',
+    achievedSummary:
+      'An active traffic campaign directed audiences to an independent community and advocacy platform.',
+    heroStatValue: 779,
+    heroStatLabel: 'landing page views',
+    metrics: [
+      { value: '$0.29', label: 'Cost per landing view' },
+      { value: '$226.70', label: 'Amount spent' },
+      { value: '16,890', label: 'Impressions' },
+      { value: '13,165', label: 'Reach' },
+    ],
+    budgetContext: '',
+    clientReality:
+      'Sensitive categories can face tighter visibility and policy constraints on social platforms, making a brand-owned website especially valuable.',
+    howAdsHelped:
+      'A cost-efficient path to the owned website, reporting 779 landing-page visits at $0.29 each.',
+    whatThisMeans:
+      'Rather than relying only on social reach, the campaign moved interested people to a destination the brand controls.',
+    screenshotUrl: '',
+    spotlightCaption: 'landing page views at $0.29 each',
+    displayOrder: 4,
+    isPublished: true,
+  },
+  {
+    clientName: 'YouTube Video Campaign',
+    platform: 'Google Ads',
+    objectiveLabel: 'Demand Gen campaign',
+    destinationDisplay: 'youtube.com/watch?v=zxkLeAcnWyE',
+    destinationUrl: 'https://youtube.com/watch?v=zxkLeAcnWyE',
+    achievedSummary:
+      'A Google Demand Gen campaign was used to increase YouTube visibility and reported public-view momentum.',
+    heroStatValue: 165611,
+    heroStatLabel: 'YouTube public views',
+    metrics: [
+      { value: '$480.34', label: 'Cost' },
+      { value: '$0.11', label: 'Average CPC' },
+      { value: '100,978', label: 'Viewable impressions' },
+      { value: '$30.00', label: 'Daily budget' },
+    ],
+    budgetContext: '$30.00 daily budget',
+    clientReality:
+      'Video needs initial distribution before it can build organic discovery, credibility, and repeat engagement.',
+    howAdsHelped:
+      'The campaign placed the video in front of a substantial viewable audience, supporting 165,611 reported public views on $480.34 in spend.',
+    whatThisMeans:
+      'A meaningful early audience for the content, instead of waiting on YouTube discovery alone.',
+    screenshotUrl: '/images/ads/youtube-demand-gen-google-ads.png',
+    screenshotAlt: 'YouTube Demand Gen Google Ads dashboard',
+    screenshotCaption: 'Campaign dashboard screenshot supplied by the campaign manager',
+    displayOrder: 5,
+    isPublished: true,
+  },
+  {
+    clientName: 'Silvia Araya',
+    platform: 'Meta Ads',
+    objectiveLabel: 'Website traffic campaign',
+    destinationDisplay: 'silviaaraya.com',
+    destinationUrl: 'https://silviaaraya.com',
+    achievedSummary:
+      'A website-traffic campaign brought visitors to anxiety-support resources, consultations, and coaching pathways.',
+    heroStatValue: 5352,
+    heroStatLabel: 'landing page views',
+    metrics: [
+      { value: '$0.09', label: 'Cost per landing view' },
+      { value: '$480.71', label: 'Amount spent' },
+      { value: '66,363', label: 'Impressions' },
+      { value: '39,800', label: 'Reach' },
+    ],
+    budgetContext: '',
+    clientReality:
+      'Support and coaching services need trust before a visitor feels ready to take the first step.',
+    howAdsHelped:
+      'The campaign directed potential clients to educational resources and consultation options, delivering 5,352 landing-page views at $0.09 each.',
+    whatThisMeans:
+      'An efficient introduction to a helpful next step, giving the brand room to build trust before a consultation or enrollment decision.',
+    screenshotUrl: '',
+    spotlightCaption: 'landing page views at $0.09 each',
+    displayOrder: 6,
+    isPublished: true,
+  },
+];
+
+export const initialAdGlossaryTerms: AdGlossaryTermItem[] = [
+  {
+    term: 'Impressions',
+    definition: 'The total number of times an ad was shown. One person can see it more than once.',
+    displayOrder: 1,
+    isPublished: true,
+  },
+  {
+    term: 'Reach',
+    definition: 'The estimated number of individual people who saw the ad at least once.',
+    displayOrder: 2,
+    isPublished: true,
+  },
+  {
+    term: 'Lead',
+    definition: 'A person who showed interest by completing a form or sharing contact details.',
+    displayOrder: 3,
+    isPublished: true,
+  },
+  {
+    term: 'Landing page view',
+    definition: 'A visitor who clicked and waited for the page to load — a stronger signal than a click alone.',
+    displayOrder: 4,
+    isPublished: true,
+  },
+  {
+    term: 'Cost per result',
+    definition: 'The average spend needed to achieve the main campaign action, such as one lead.',
+    displayOrder: 5,
+    isPublished: true,
+  },
+  {
+    term: 'CPC',
+    definition: 'Cost per click. The average amount spent when someone clicks an ad.',
+    displayOrder: 6,
+    isPublished: true,
+  },
+  {
+    term: 'CPL',
+    definition: 'Cost per lead. The average amount spent to generate one lead.',
+    displayOrder: 7,
+    isPublished: true,
+  },
+  {
+    term: 'Amount spent',
+    definition: 'The total money invested in the campaign during the reporting period shown.',
+    displayOrder: 8,
+    isPublished: true,
+  },
+  {
+    term: 'Budget',
+    definition: 'The planned daily or total spend allowed. Actual spend can come in lower.',
+    displayOrder: 9,
+    isPublished: true,
+  },
+  {
+    term: 'Viewable impression',
+    definition: "An impression that met the platform's standard for being visible to a viewer.",
+    displayOrder: 10,
+    isPublished: true,
+  },
+  {
+    term: 'YouTube public view',
+    definition: 'A video view reported publicly on YouTube, showing how much attention it earned.',
+    displayOrder: 11,
+    isPublished: true,
+  },
+  {
+    term: 'Attribution window',
+    definition: 'The period after a view or click in which a result can still be credited to the ad.',
+    displayOrder: 12,
+    isPublished: true,
+  },
+];
+
+/**
+ * Non-destructive Paid Ads & Glossary Seeding Utility
+ * Creates only missing paid_ads / ad_glossary documents unless force=true.
+ */
+export async function seedPaidAdsAndGlossaryIfNeeded(
+  force = false
+): Promise<{ seeded: boolean; message: string }> {
+  if (!auth.currentUser) {
+    return { seeded: false, message: 'Admin authentication required to seed Paid Ads data.' };
+  }
+
+  try {
+    const paidAdsSnap = await getDocs(collection(db, 'paid_ads'));
+    if (paidAdsSnap.empty || force) {
+      for (let i = 0; i < initialPaidAdCaseStudies.length; i++) {
+        await setDoc(doc(db, 'paid_ads', `paid_ad_${i + 1}`), initialPaidAdCaseStudies[i]);
+      }
+    }
+
+    const glossarySnap = await getDocs(collection(db, 'ad_glossary'));
+    if (glossarySnap.empty || force) {
+      for (let i = 0; i < initialAdGlossaryTerms.length; i++) {
+        await setDoc(doc(db, 'ad_glossary', `ad_glossary_${i + 1}`), initialAdGlossaryTerms[i]);
+      }
+    }
+
+    return {
+      seeded: true,
+      message: 'Paid Ads Case Studies & Advertising Glossary synchronized successfully with Firestore.',
+    };
+  } catch (error) {
+    console.error('Paid Ads seeding notice:', error);
+    return { seeded: false, message: error instanceof Error ? error.message : String(error) };
+  }
+}
+
 /**
  * Safe Initial Data Seeding Utility
  * Only creates records if collection or doc is missing. Requires admin authentication.
@@ -669,6 +1073,14 @@ export async function seedInitialDataIfNeeded(force = false): Promise<{ seeded: 
       }
     }
 
+    // 4a. Fiverr Gigs
+    const fiverrGigsSnap = await getDocs(collection(db, 'fiverr_gigs'));
+    if (fiverrGigsSnap.empty || force) {
+      for (let i = 0; i < initialFiverrGigs.length; i++) {
+        await setDoc(doc(db, 'fiverr_gigs', `fiverr_gig_${i + 1}`), initialFiverrGigs[i]);
+      }
+    }
+
     // 4b. Projects
     const projectsSnap = await getDocs(collection(db, 'projects'));
     if (projectsSnap.empty || force) {
@@ -676,6 +1088,9 @@ export async function seedInitialDataIfNeeded(force = false): Promise<{ seeded: 
         await setDoc(doc(db, 'projects', `project_${i + 1}`), initialProjects[i]);
       }
     }
+
+    // 4c. Paid Ads Case Studies & Advertising Glossary (non-destructive if already populated)
+    await seedPaidAdsAndGlossaryIfNeeded(force);
 
     // 5. Videos
     const videosSnap = await getDocs(collection(db, 'videos'));

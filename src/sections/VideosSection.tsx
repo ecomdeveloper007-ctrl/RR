@@ -9,7 +9,7 @@ interface VideosSectionProps {
 }
 
 export const VideosSection: React.FC<VideosSectionProps> = ({ onSelectVideo }) => {
-  const { videos } = usePortfolio();
+  const { videos, siteSettings } = usePortfolio();
   const [activeCategory, setActiveCategory] = useState<string>('All');
 
   const publishedVideos = videos.filter((v) => v.isPublished);
@@ -24,10 +24,10 @@ export const VideosSection: React.FC<VideosSectionProps> = ({ onSelectVideo }) =
   if (publishedVideos.length === 0) return null;
 
   return (
-    <section id="videos" className="py-20 lg:py-28 bg-[#F3F7F5] border-t border-slate-200/80">
+    <section id="videos" className="py-10 sm:py-12 lg:py-16 bg-[#F3F7F5] border-t border-slate-200/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 mb-7 sm:mb-8">
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 text-xs font-bold text-emerald-800 tracking-wider uppercase bg-emerald-100/80 px-3 py-1 rounded-full border border-emerald-300/60 mb-3">
               <Film className="w-3.5 h-3.5 text-emerald-600" />
@@ -41,13 +41,13 @@ export const VideosSection: React.FC<VideosSectionProps> = ({ onSelectVideo }) =
             </p>
           </div>
 
-          {/* Filter Categories */}
-          <div className="flex flex-wrap items-center gap-1.5 p-1 bg-white rounded-full border border-slate-200 shadow-sm">
+          {/* Filter Categories with Horizontal Scroll on Touch Devices */}
+          <div className="flex items-center gap-1.5 p-1 bg-white rounded-full border border-slate-200 shadow-sm overflow-x-auto no-scrollbar max-w-full shrink-0">
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                className={`min-h-[40px] px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap shrink-0 transition-all ${
                   activeCategory === cat
                     ? 'bg-emerald-600 text-white shadow-sm'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
@@ -60,7 +60,7 @@ export const VideosSection: React.FC<VideosSectionProps> = ({ onSelectVideo }) =
         </div>
 
         {/* Video Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
           {filteredVideos.map((video, idx) => (
             <motion.div
               key={video.id || idx}
@@ -116,6 +116,25 @@ export const VideosSection: React.FC<VideosSectionProps> = ({ onSelectVideo }) =
               </div>
             </motion.div>
           ))}
+        </div>
+
+        {/* Need Creative Content CTA Banner */}
+        <div className="mt-8 sm:mt-10 p-5 sm:p-6 rounded-3xl bg-white border border-[#E2E8F0] shadow-sm flex flex-col sm:flex-row items-center justify-between gap-5">
+          <div className="space-y-1 text-center sm:text-left">
+            <h4 className="text-xl font-bold text-[#111827]">Need Creative Content?</h4>
+            <p className="text-xs sm:text-sm text-[#64748B]">
+              Order viral short-form video reels, scripts, and social management on my verified Fiverr profile.
+            </p>
+          </div>
+          <a
+            href={siteSettings.fiverrUrl || 'https://www.fiverr.com/pjangid'}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full sm:w-auto min-h-[48px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#10B981] text-white text-xs font-semibold hover:bg-[#059669] shadow-md transition-all active:scale-95 shrink-0"
+          >
+            <span>View My Fiverr Services</span>
+            <ArrowUpRight className="w-4 h-4" />
+          </a>
         </div>
       </div>
     </section>

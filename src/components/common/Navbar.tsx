@@ -25,7 +25,6 @@ export const Navbar: React.FC = () => {
         'videos',
         'case-studies',
         'testimonials',
-        'contact',
       ];
       for (const sectionId of sections) {
         const el = document.getElementById(sectionId);
@@ -73,11 +72,11 @@ export const Navbar: React.FC = () => {
           {/* Brand Logo */}
           <a href="#home" className="flex items-center gap-2.5 group text-[#111827]">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#10B981] to-teal-700 flex items-center justify-center text-white font-extrabold text-base shadow-sm shadow-emerald-500/20 group-hover:scale-105 transition-transform">
-              P
+              PJ
             </div>
             <div className="flex flex-col">
               <span className="font-extrabold text-base sm:text-lg tracking-tight text-[#111827] group-hover:text-[#10B981] transition-colors">
-                Patricia
+                PJ
               </span>
               <span className="text-[10px] font-semibold text-[#64748B] tracking-wider uppercase">
                 Digital Growth
@@ -88,12 +87,14 @@ export const Navbar: React.FC = () => {
           {/* Desktop Nav */}
           <nav className="hidden xl:flex items-center gap-1 bg-[#F3F7F5] p-1.5 rounded-full border border-[#E2E8F0] backdrop-blur-sm">
             {navLinks.map((link) => {
-              const isActive = activeSection === link.href.replace('#', '');
+              const sectionId = link.href.replace('#', '');
+              const isActive = activeSection === sectionId;
               return (
                 <a
                   key={link.name}
                   href={link.href}
-                  className={`px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-200 ${
+                  onClick={() => setActiveSection(sectionId)}
+                  className={`px-3 py-1.5 text-xs font-semibold rounded-full whitespace-nowrap shrink-0 transition-all duration-200 ${
                     isActive
                       ? 'bg-[#10B981] text-white shadow-xs'
                       : 'text-[#64748B] hover:text-[#111827] hover:bg-white/70'
@@ -108,10 +109,12 @@ export const Navbar: React.FC = () => {
           {/* Header Action Button */}
           <div className="hidden sm:flex items-center gap-3">
             <a
-              href="#contact"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold bg-[#111827] text-white hover:bg-[#10B981] shadow-xs hover:shadow-md transition-all duration-200 active:scale-95"
+              href={siteSettings.fiverrUrl || 'https://www.fiverr.com/pjangid'}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold bg-[#10B981] text-white hover:bg-[#059669] shadow-xs hover:shadow-md transition-all duration-200 active:scale-95"
             >
-              <span>Let&apos;s Talk</span>
+              <span>Hire Me on Fiverr</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </a>
           </div>
@@ -120,7 +123,7 @@ export const Navbar: React.FC = () => {
           <div className="flex items-center gap-2 xl:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 rounded-xl text-slate-700 hover:bg-slate-100 transition-colors"
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl text-slate-700 hover:bg-slate-100 active:bg-slate-200 transition-colors"
               aria-label="Toggle navigation menu"
             >
               {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -130,31 +133,35 @@ export const Navbar: React.FC = () => {
 
         {/* Mobile Navigation Dropdown */}
         {isMobileMenuOpen && (
-          <div className="xl:hidden bg-white/98 backdrop-blur-xl border-b border-[#E2E8F0] px-6 py-6 shadow-xl space-y-4">
-            <div className="grid grid-cols-2 gap-2">
+          <div className="xl:hidden bg-white/98 backdrop-blur-xl border-b border-[#E2E8F0] px-5 py-5 shadow-xl space-y-4 max-h-[calc(100vh-80px)] overflow-y-auto overscroll-contain">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
               {navLinks.map((link) => (
                 <a
                   key={link.name}
                   href={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`px-3 py-2 rounded-lg text-xs font-semibold ${
+                  className={`min-h-[44px] px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-between transition-colors ${
                     activeSection === link.href.replace('#', '')
-                      ? 'bg-[#D1FAE5] text-emerald-900 font-bold'
-                      : 'text-slate-700 hover:bg-slate-50'
+                      ? 'bg-[#D1FAE5] text-emerald-950 font-bold'
+                      : 'text-slate-700 hover:bg-slate-100/80 active:bg-slate-100'
                   }`}
                 >
-                  {link.name}
+                  <span>{link.name}</span>
+                  <span className="text-[10px] text-slate-400 font-mono">→</span>
                 </a>
               ))}
             </div>
 
-            <div className="pt-3 border-t border-[#E2E8F0]">
+            <div className="pt-2 border-t border-[#E2E8F0]">
               <a
-                href="#contact"
+                href={siteSettings.fiverrUrl || 'https://www.fiverr.com/pjangid'}
+                target="_blank"
+                rel="noopener noreferrer"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="w-full text-center py-3 rounded-xl bg-[#10B981] text-white font-semibold text-xs shadow-md shadow-emerald-500/20 block"
+                className="w-full min-h-[44px] flex items-center justify-center py-3 px-4 rounded-xl bg-[#10B981] active:bg-[#059669] text-white font-semibold text-xs shadow-md shadow-emerald-500/20"
               >
-                Let&apos;s Discuss Your Project
+                <span>Hire Me on Fiverr</span>
+                <ArrowUpRight className="w-4 h-4 ml-1.5" />
               </a>
             </div>
           </div>
