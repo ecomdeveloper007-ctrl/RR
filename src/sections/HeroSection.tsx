@@ -4,7 +4,7 @@ import { ArrowUpRight, CheckCircle2, Sparkles, MessageCircle, Play } from 'lucid
 import { usePortfolio } from '../context/PortfolioContext';
 
 const DEFAULT_HERO_IMAGE =
-  'https://fiverr-res.cloudinary.com/image/upload/f_auto,q_auto,t_profile_original/v1/attachments/profile/photo/9e7939e1f4ea9eefd97b1622afb2fffc-1775900790435/8274214f-1465-4c61-80e9-a882cf332a8a.png';
+  'public/images/Neon Green Ring Portrait with Glasses.png';
 
 export const HeroSection: React.FC = () => {
   const { hero, isHeroReady, siteSettings } = usePortfolio();
