@@ -3,8 +3,7 @@ import { motion } from 'motion/react';
 import { ArrowUpRight, CheckCircle2, Sparkles, MessageCircle, Play } from 'lucide-react';
 import { usePortfolio } from '../context/PortfolioContext';
 
-const DEFAULT_HERO_IMAGE =
-  'public/images/Neon Green Ring Portrait with Glasses.png';
+const DEFAULT_HERO_IMAGE ='public/images/Neon Green Ring Portrait with Glasses.png';
 
 export const HeroSection: React.FC = () => {
   const { hero, isHeroReady, siteSettings } = usePortfolio();
