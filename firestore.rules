@@ -3,25 +3,158 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Default deny catch-all
+    // Global default deny catch-all
     match /{document=**} {
       allow read, write: if false;
     }
 
+    // Verified identity primitives
     function isSignedIn() {
-      return request.auth != null;
+      return request.auth != null &&
+        request.auth.token.email != null &&
+        request.auth.token.email_verified == true;
+    }
+
+    function callerEmail() {
+      return request.auth.token.email.lower();
     }
 
     function isValidId(id) {
-      return id is string && id.size() > 0 && id.size() <= 128;
+      return id is string &&
+        id.size() > 0 &&
+        id.size() <= 128 &&
+        id.matches('^[a-zA-Z0-9_\\-]+$');
     }
 
-    // Admin verification: primary admin email or registered adminUser document
-    function isAdmin() {
-      return isSignedIn() && (
-        request.auth.token.email == 'prakashinfosys1234@gmail.com' ||
-        exists(/databases/$(database)/documents/adminUsers/$(request.auth.uid))
+    function isValidEmailDocId(id) {
+      return id is string &&
+        id.size() >= 5 &&
+        id.size() <= 120 &&
+        id.matches('^[a-z0-9._%+\\-]+@[a-z0-9.\\-]+\\.[a-z]{2,}$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Server-side RBAC lookups against teamMembers collection
+    function isPrimaryOwner() {
+      return isSignedIn() && callerEmail() == 'prakashinfosys1234@gmail.com';
+    }
+
+    function hasTeamDoc() {
+      return isSignedIn() &&
+        exists(/databases/$(database)/documents/teamMembers/$(callerEmail()));
+    }
+
+    function teamDoc() {
+      return get(/databases/$(database)/documents/teamMembers/$(callerEmail())).data;
+    }
+
+    function isActiveMember() {
+      return isPrimaryOwner() || (hasTeamDoc() && teamDoc().status == 'active');
+    }
+
+    function isSuperAdmin() {
+      return isPrimaryOwner() || (isActiveMember() && teamDoc().role == 'super_admin');
+    }
+
+    function isRoleAdmin() {
+      return isSuperAdmin() || (isActiveMember() && teamDoc().role == 'admin');
+    }
+
+    function isRoleWriter() {
+      return isActiveMember() && teamDoc().role != 'viewer';
+    }
+
+    function hasPerm(permKey) {
+      return isSuperAdmin() || (
+        isActiveMember() &&
+        teamDoc().permissions is map &&
+        teamDoc().permissions[permKey] == true
       );
+    }
+
+    function canWriteSection(permKey) {
+      return isSuperAdmin() || (isRoleWriter() && hasPerm(permKey));
+    }
+
+    function canDeleteSection(permKey) {
+      return isSuperAdmin() || (isRoleAdmin() && hasPerm(permKey));
+    }
+
+    // Validation helpers
+    function isValidPermissionsMap(perms) {
+      return perms is map &&
+        perms.keys().hasAll([
+          'view_dashboard',
+          'manage_portfolio',
+          'manage_videos',
+          'manage_case_studies',
+          'manage_services',
+          'manage_testimonials',
+          'manage_website_settings',
+          'manage_media',
+          'manage_team_members'
+        ]) &&
+        perms.keys().hasOnly([
+          'view_dashboard',
+          'manage_portfolio',
+          'manage_videos',
+          'manage_case_studies',
+          'manage_services',
+          'manage_testimonials',
+          'manage_website_settings',
+          'manage_media',
+          'manage_team_members'
+        ]) &&
+        perms.view_dashboard is bool &&
+        perms.manage_portfolio is bool &&
+        perms.manage_videos is bool &&
+        perms.manage_case_studies is bool &&
+        perms.manage_services is bool &&
+        perms.manage_testimonials is bool &&
+        perms.manage_website_settings is bool &&
+        perms.manage_media is bool &&
+        perms.manage_team_members is bool;
+    }
+
+    function isValidTeamMember(data, memberEmail) {
+      return data.keys().hasAll(['name', 'email', 'role', 'status', 'permissions', 'invitedBy', 'createdAt', 'updatedAt']) &&
+        data.keys().hasOnly([
+          'uid',
+          'name',
+          'email',
+          'role',
+          'status',
+          'permissions',
+          'invitedBy',
+          'inviteMethod',
+          'createdAt',
+          'updatedAt',
+          'activatedAt',
+          'lastAccessAt',
+          'revokedAt',
+          'revokedBy'
+        ]) &&
+        data.name is string && data.name.size() >= 1 && data.name.size() <= 120 &&
+        data.email is string && data.email.size() >= 5 && data.email.size() <= 120 && data.email.lower() == memberEmail &&
+        data.role is string && data.role in ['super_admin', 'admin', 'editor', 'viewer'] &&
+        data.status is string && data.status in ['pending', 'active', 'inactive', 'revoked'] &&
+        isValidPermissionsMap(data.permissions) &&
+        data.invitedBy is string && data.invitedBy.size() >= 3 && data.invitedBy.size() <= 120 &&
+        data.createdAt is string && data.createdAt.size() <= 60 &&
+        data.updatedAt is string && data.updatedAt.size() <= 60 &&
+        (!('uid' in data) || (data.uid is string && data.uid.size() <= 128)) &&
+        (!('inviteMethod' in data) || (data.inviteMethod is string && data.inviteMethod.size() <= 40)) &&
+        (!('activatedAt' in data) || (data.activatedAt is string && data.activatedAt.size() <= 60)) &&
+        (!('lastAccessAt' in data) || (data.lastAccessAt is string && data.lastAccessAt.size() <= 60)) &&
+        (!('revokedAt' in data) || (data.revokedAt is string && data.revokedAt.size() <= 60)) &&
+        (!('revokedBy' in data) || (data.revokedBy is string && data.revokedBy.size() <= 120));
     }
 
     function isValidEnquiry(data) {
@@ -29,123 +162,211 @@ service cloud.firestore {
         data.fullName is string && data.fullName.size() >= 2 && data.fullName.size() <= 100 &&
         data.email is string && data.email.size() >= 5 && data.email.size() <= 120 &&
         data.message is string && data.message.size() >= 5 && data.message.size() <= 2000 &&
-        data.status is string && (
-          data.status == 'new' ||
-          data.status == 'read' ||
-          data.status == 'in_progress' ||
-          data.status == 'completed' ||
-          data.status == 'archived'
+        data.status is string && data.status in ['new', 'read', 'in_progress', 'completed', 'archived'];
+    }
+
+    function isValidMedia(data) {
+      return data.keys().hasAll(['fileName', 'fileUrl', 'fileType', 'createdAt']) &&
+        data.fileName is string && data.fileName.size() >= 1 && data.fileName.size() <= 200 &&
+        data.fileUrl is string && data.fileUrl.size() >= 1 && data.fileUrl.size() <= 2000 &&
+        data.fileType is string && data.fileType.size() >= 1 && data.fileType.size() <= 100 &&
+        data.createdAt is string && data.createdAt.size() <= 60;
+    }
+
+    function isValidAuditLog(data) {
+      return data.keys().hasAll(['adminEmail', 'action', 'module', 'timestamp']) &&
+        data.adminEmail is string && data.adminEmail.size() >= 3 && data.adminEmail.size() <= 120 &&
+        data.action is string && data.action.size() >= 1 && data.action.size() <= 120 &&
+        data.module is string && data.module.size() >= 1 && data.module.size() <= 60 &&
+        data.timestamp is string && data.timestamp.size() <= 60;
+    }
+
+    // Team Members RBAC Collection
+    match /teamMembers/{memberEmail} {
+      allow get: if isValidEmailDocId(memberEmail) && (
+        isSuperAdmin() ||
+        (isSignedIn() && callerEmail() == memberEmail)
+      );
+      allow list: if isSuperAdmin();
+      allow create: if isValidEmailDocId(memberEmail) &&
+        isSuperAdmin() &&
+        isValidTeamMember(incoming(), memberEmail);
+      allow update: if isValidEmailDocId(memberEmail) &&
+        isValidTeamMember(incoming(), memberEmail) && (
+          // Super Admin can manage members & permissions, but cannot revoke/downgrade primary owner
+          (
+            isSuperAdmin() &&
+            incoming().email == existing().email &&
+            incoming().createdAt == existing().createdAt &&
+            (memberEmail != 'prakashinfosys1234@gmail.com' || (incoming().role == 'super_admin' && incoming().status == 'active'))
+          ) ||
+          // Invited member can claim/activate ONLY a pending invite for their own verified email, without changing role/permissions
+          (
+            isSignedIn() &&
+            callerEmail() == memberEmail &&
+            existing().status == 'pending' &&
+            incoming().status == 'active' &&
+            incoming().role == existing().role &&
+            incoming().permissions == existing().permissions &&
+            incoming().email == existing().email &&
+            incoming().invitedBy == existing().invitedBy &&
+            incoming().createdAt == existing().createdAt &&
+            incoming().uid == request.auth.uid &&
+            incoming().diff(existing()).affectedKeys().hasOnly(['status', 'uid', 'activatedAt', 'lastAccessAt', 'updatedAt', 'name'])
+          ) ||
+          // Active member can record lastAccessAt heartbeat on their own record
+          (
+            isSignedIn() &&
+            callerEmail() == memberEmail &&
+            existing().status == 'active' &&
+            incoming().status == 'active' &&
+            incoming().diff(existing()).affectedKeys().hasOnly(['lastAccessAt', 'uid', 'updatedAt'])
+          )
         );
+      allow delete: if isValidEmailDocId(memberEmail) &&
+        isSuperAdmin() &&
+        memberEmail != 'prakashinfosys1234@gmail.com';
     }
 
-    // Public Collections:
-    // Read: open to public visitors (get and list) for website content
-    // Write: restricted strictly to authenticated admins with ID validation
+    // Website Settings (restricted to Super Admin & Admin with manage_website_settings)
     match /siteSettings/{docId} {
-      allow read: if true;
-      allow write: if isValidId(docId) && isAdmin();
+      allow get, list: if true;
+      allow create, update: if isValidId(docId) && (isSuperAdmin() || (isRoleAdmin() && hasPerm('manage_website_settings')));
+      allow delete: if isValidId(docId) && isSuperAdmin();
     }
 
+    // Hero & About & Starter Guide & Portfolio
     match /hero/{docId} {
-      allow read: if true;
-      allow write: if isValidId(docId) && isAdmin();
+      allow get, list: if true;
+      allow create, update: if isValidId(docId) && canWriteSection('manage_portfolio');
+      allow delete: if isValidId(docId) && isSuperAdmin();
     }
 
     match /about/{docId} {
-      allow read: if true;
-      allow write: if isValidId(docId) && isAdmin();
+      allow get, list: if true;
+      allow create, update: if isValidId(docId) && canWriteSection('manage_portfolio');
+      allow delete: if isValidId(docId) && isSuperAdmin();
     }
 
     match /expertise/{expertiseId} {
-      allow read: if true;
-      allow write: if isValidId(expertiseId) && isAdmin();
-    }
-
-    match /services/{serviceId} {
-      allow read: if true;
-      allow write: if isValidId(serviceId) && isAdmin();
-    }
-
-    match /fiverr_gigs/{gigId} {
-      allow read: if true;
-      allow write: if isValidId(gigId) && isAdmin();
+      allow get, list: if true;
+      allow create, update: if isValidId(expertiseId) && canWriteSection('manage_portfolio');
+      allow delete: if isValidId(expertiseId) && canDeleteSection('manage_portfolio');
     }
 
     match /projects/{projectId} {
-      allow read: if true;
-      allow write: if isValidId(projectId) && isAdmin();
+      allow get, list: if true;
+      allow create, update: if isValidId(projectId) && canWriteSection('manage_portfolio');
+      allow delete: if isValidId(projectId) && canDeleteSection('manage_portfolio');
     }
 
     match /paid_ads/{adId} {
-      allow read: if true;
-      allow write: if isValidId(adId) && isAdmin();
+      allow get, list: if true;
+      allow create, update: if isValidId(adId) && canWriteSection('manage_portfolio');
+      allow delete: if isValidId(adId) && canDeleteSection('manage_portfolio');
     }
 
     match /ad_glossary/{termId} {
-      allow read: if true;
-      allow write: if isValidId(termId) && isAdmin();
-    }
-
-    match /videos/{videoId} {
-      allow read: if true;
-      allow write: if isValidId(videoId) && isAdmin();
-    }
-
-    match /caseStudies/{caseStudyId} {
-      allow read: if true;
-      allow write: if isValidId(caseStudyId) && isAdmin();
+      allow get, list: if true;
+      allow create, update: if isValidId(termId) && canWriteSection('manage_portfolio');
+      allow delete: if isValidId(termId) && canDeleteSection('manage_portfolio');
     }
 
     match /creativeProcess/{processId} {
-      allow read: if true;
-      allow write: if isValidId(processId) && isAdmin();
+      allow get, list: if true;
+      allow create, update: if isValidId(processId) && canWriteSection('manage_portfolio');
+      allow delete: if isValidId(processId) && canDeleteSection('manage_portfolio');
     }
 
     match /achievements/{achievementId} {
-      allow read: if true;
-      allow write: if isValidId(achievementId) && isAdmin();
+      allow get, list: if true;
+      allow create, update: if isValidId(achievementId) && canWriteSection('manage_portfolio');
+      allow delete: if isValidId(achievementId) && canDeleteSection('manage_portfolio');
     }
 
     match /resources/{resourceId} {
-      allow read: if true;
-      allow write: if isValidId(resourceId) && isAdmin();
+      allow get, list: if true;
+      allow create, update: if isValidId(resourceId) && canWriteSection('manage_portfolio');
+      allow delete: if isValidId(resourceId) && canDeleteSection('manage_portfolio');
     }
 
+    // Services & Fiverr Gigs
+    match /services/{serviceId} {
+      allow get, list: if true;
+      allow create, update: if isValidId(serviceId) && canWriteSection('manage_services');
+      allow delete: if isValidId(serviceId) && canDeleteSection('manage_services');
+    }
+
+    match /fiverr_gigs/{gigId} {
+      allow get, list: if true;
+      allow create, update: if isValidId(gigId) && canWriteSection('manage_services');
+      allow delete: if isValidId(gigId) && canDeleteSection('manage_services');
+    }
+
+    // Videos
+    match /videos/{videoId} {
+      allow get, list: if true;
+      allow create, update: if isValidId(videoId) && canWriteSection('manage_videos');
+      allow delete: if isValidId(videoId) && canDeleteSection('manage_videos');
+    }
+
+    // Case Studies
+    match /caseStudies/{caseStudyId} {
+      allow get, list: if true;
+      allow create, update: if isValidId(caseStudyId) && canWriteSection('manage_case_studies');
+      allow delete: if isValidId(caseStudyId) && canDeleteSection('manage_case_studies');
+    }
+
+    // Testimonials
     match /testimonials/{testimonialId} {
-      allow read: if true;
-      allow write: if isValidId(testimonialId) && isAdmin();
+      allow get, list: if true;
+      allow create, update: if isValidId(testimonialId) && canWriteSection('manage_testimonials');
+      allow delete: if isValidId(testimonialId) && canDeleteSection('manage_testimonials');
     }
 
+    // Media Library
     match /media/{mediaId} {
-      allow read: if true;
-      allow write: if isValidId(mediaId) && isAdmin();
+      allow get, list: if true;
+      allow create, update: if isValidId(mediaId) && isValidMedia(incoming()) && canWriteSection('manage_media');
+      allow delete: if isValidId(mediaId) && canDeleteSection('manage_media');
     }
 
-    // Contact Enquiries / Messages:
-    // Create: public visitors can submit with validated schema and status == 'new'
-    // Read / Update / Delete: strictly restricted to admin (protects PII)
+    // Contact Enquiries / Messages (PII protected)
     match /enquiries/{enquiryId} {
       allow create: if isValidId(enquiryId) &&
-        isValidEnquiry(request.resource.data) &&
-        request.resource.data.status == 'new';
-      allow read, update, delete: if isAdmin();
+        isValidEnquiry(incoming()) &&
+        incoming().status == 'new';
+      allow get, list: if isActiveMember() && hasPerm('view_dashboard');
+      allow update, delete: if isValidId(enquiryId) && isRoleAdmin();
     }
 
-    // Admin Users
+    // Legacy Admin Users (Super Admin only)
     match /adminUsers/{userId} {
-      allow read, write: if isValidId(userId) && isAdmin();
+      allow get, list, write: if isValidId(userId) && isSuperAdmin();
     }
 
-    // Audit Logs: Admin read/create, immutable history
+    // System Initialization Metadata
+    match /system/{docId} {
+      allow get: if true;
+      allow list: if isActiveMember();
+      allow create, update: if isValidId(docId) && isRoleAdmin();
+      allow delete: if false;
+    }
+
+    // Audit Logs: immutable history
     match /auditLogs/{logId} {
-      allow read, create: if isAdmin();
+      allow get, list: if isRoleAdmin();
+      allow create: if isValidId(logId) &&
+        isActiveMember() &&
+        isValidAuditLog(incoming()) &&
+        incoming().adminEmail.lower() == callerEmail();
       allow update, delete: if false;
     }
 
     // Test connection doc
     match /test/{docId} {
-      allow read: if true;
-      allow write: if isAdmin();
+      allow get: if true;
+      allow write: if isValidId(docId) && isSuperAdmin();
     }
   }
 }

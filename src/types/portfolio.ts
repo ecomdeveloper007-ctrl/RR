@@ -19,6 +19,7 @@ export interface HeroData {
   subtitle: string;
   description: string;
   profileImageUrl?: string;
+  storagePath?: string;
   ctaTextWork: string;
   ctaUrlWork: string;
   ctaTextContact: string;
@@ -60,6 +61,7 @@ export interface ServiceItem {
   fullDescription: string;
   iconName: string;
   imageUrl?: string;
+  storagePath?: string;
   deliverables: string; // newline-separated list
   benefits?: string; // newline-separated list
   ctaText?: string;
@@ -80,6 +82,7 @@ export interface ProjectItem {
   results: string;
   technologies: string;
   thumbnail: string;
+  storagePath?: string;
   galleryImages?: string; // comma-separated URLs
   externalUrl?: string;
   fiverrUrl?: string;
@@ -94,8 +97,10 @@ export interface VideoItem {
   category: string;
   description: string;
   videoUrl: string;
+  videoStoragePath?: string;
   videoType: 'youtube' | 'vimeo' | 'mp4';
   thumbnail: string;
+  storagePath?: string;
   duration?: string;
   isFeatured: boolean;
   displayOrder: number;
@@ -115,6 +120,7 @@ export interface CaseStudyItem {
   resultsSummary: string;
   metrics: { label: string; value: string }[];
   thumbnail: string;
+  storagePath?: string;
   displayOrder: number;
   isPublished: boolean;
 }
@@ -151,6 +157,7 @@ export interface TestimonialItem {
   testimonialText: string;
   rating: number;
   avatarUrl?: string;
+  storagePath?: string;
   displayOrder: number;
   isPublished: boolean;
 }
@@ -173,10 +180,45 @@ export interface MediaItem {
   id?: string;
   fileName: string;
   fileUrl: string;
+  storagePath?: string;
   fileType: string;
   fileSize: number;
   uploadedBy?: string;
   createdAt: string;
+}
+
+export type TeamRole = 'super_admin' | 'admin' | 'editor' | 'viewer';
+export type TeamStatus = 'pending' | 'active' | 'inactive' | 'revoked';
+
+export type TeamPermissionKey =
+  | 'view_dashboard'
+  | 'manage_portfolio'
+  | 'manage_videos'
+  | 'manage_case_studies'
+  | 'manage_services'
+  | 'manage_testimonials'
+  | 'manage_website_settings'
+  | 'manage_media'
+  | 'manage_team_members';
+
+export type TeamPermissions = Record<TeamPermissionKey, boolean>;
+
+export interface TeamMemberItem {
+  id?: string; // normalized lowercase email
+  uid?: string;
+  name: string;
+  email: string;
+  role: TeamRole;
+  status: TeamStatus;
+  permissions: TeamPermissions;
+  invitedBy: string;
+  inviteMethod?: 'google_or_email' | 'email_link';
+  createdAt: string;
+  updatedAt: string;
+  activatedAt?: string;
+  lastAccessAt?: string;
+  revokedAt?: string;
+  revokedBy?: string;
 }
 
 export interface AdminUserItem {
@@ -232,6 +274,7 @@ export interface PaidAdCaseStudyItem {
   howAdsHelped: string;
   whatThisMeans: string;
   screenshotUrl?: string;
+  storagePath?: string;
   screenshotAlt?: string;
   screenshotCaption?: string;
   spotlightCaption?: string;

@@ -3,12 +3,13 @@ import { motion } from 'motion/react';
 import { ArrowUpRight, CheckCircle2, Sparkles, MessageCircle, Play } from 'lucide-react';
 import { usePortfolio } from '../context/PortfolioContext';
 
-const DEFAULT_HERO_IMAGE ='public/images/Neon Green Ring Portrait with Glasses.png';
+const DEFAULT_HERO_IMAGE =
+  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80';
 
 export const HeroSection: React.FC = () => {
   const { hero, isHeroReady, siteSettings } = usePortfolio();
   const [isImageLoaded, setIsImageLoaded] = useState(false);
- const imgRef = useRef<HTMLImageElement | null>(null); 
+  const imgRef = useRef<HTMLImageElement | null>(null);
 
   const heroImageSrc = isHeroReady
     ? hero.profileImageUrl || DEFAULT_HERO_IMAGE

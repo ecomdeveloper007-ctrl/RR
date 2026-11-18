@@ -2,22 +2,28 @@ rules_version = '2';
 
 service firebase.storage {
   match /b/{bucket}/o {
-    // Public files (thumbnails, guides, headshots) can be read by all
-    match /public/{allPaths=**} {
-      allow read: if true;
-      allow write: if request.auth != null && (
-        request.auth.token.email == 'prakashinfosys1234@gmail.com' ||
-        firestore.exists(/databases/(default)/documents/adminUsers/$(request.auth.uid))
-      );
+    // Default deny catch-all
+    match /{allPaths=**} {
+      allow read, write: if false;
     }
 
-    // Default: write only for admin
-    match /{allPaths=**} {
+    // Public portfolio & marketing media files (images, videos, PDFs)
+    // Uploads require a verified authenticated Firebase session and valid file size/type.
+    // Note: Named Firestore databases cannot be queried cross-service from Storage Rules;
+    // Firestore Security Rules strictly enforce RBAC on all media metadata and content references.
+    match /public/{allPaths=**} {
       allow read: if true;
-      allow write: if request.auth != null && (
-        request.auth.token.email == 'prakashinfosys1234@gmail.com' ||
-        firestore.exists(/databases/(default)/documents/adminUsers/$(request.auth.uid))
-      );
+      allow create, update: if request.auth != null
+        && request.auth.token.email_verified == true
+        && request.resource != null
+        && request.resource.size <= 100 * 1024 * 1024
+        && (
+          request.resource.contentType.matches('image/.*') ||
+          request.resource.contentType.matches('video/.*') ||
+          request.resource.contentType == 'application/pdf'
+        );
+      allow delete: if request.auth != null
+        && request.auth.token.email_verified == true;
     }
   }
 }

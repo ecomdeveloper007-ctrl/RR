@@ -202,6 +202,39 @@
       },
       "required": ["email", "role"]
     },
+    "TeamMember": {
+      "title": "Team Member",
+      "description": "RBAC team member accounts, invitations, roles, status, and granular permissions",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 120 },
+        "email": { "type": "string", "maxLength": 120 },
+        "role": { "type": "string", "enum": ["super_admin", "admin", "editor", "viewer"] },
+        "status": { "type": "string", "enum": ["pending", "active", "inactive", "revoked"] },
+        "permissions": { "type": "object" },
+        "invitedBy": { "type": "string", "maxLength": 120 },
+        "inviteMethod": { "type": "string", "maxLength": 40 },
+        "createdAt": { "type": "string", "maxLength": 60 },
+        "updatedAt": { "type": "string", "maxLength": 60 },
+        "activatedAt": { "type": "string", "maxLength": 60 },
+        "lastAccessAt": { "type": "string", "maxLength": 60 },
+        "revokedAt": { "type": "string", "maxLength": 60 },
+        "revokedBy": { "type": "string", "maxLength": 120 }
+      },
+      "required": ["name", "email", "role", "status", "permissions", "invitedBy", "createdAt", "updatedAt"]
+    },
+    "SystemMeta": {
+      "title": "System Metadata",
+      "description": "System initialization state to prevent re-seeding intentionally modified or emptied collections",
+      "type": "object",
+      "properties": {
+        "seededOnce": { "type": "boolean" },
+        "seededAt": { "type": "string", "maxLength": 60 },
+        "updatedAt": { "type": "string", "maxLength": 60 }
+      },
+      "required": ["seededOnce"]
+    },
     "AuditLog": {
       "title": "Audit Log",
       "description": "Security audit record of admin updates and changes",
@@ -333,7 +366,15 @@
     },
     "/adminUsers/{userId}": {
       "schema": "AdminUser",
-      "description": "Registered administrator accounts"
+      "description": "Legacy registered administrator accounts"
+    },
+    "/teamMembers/{memberEmail}": {
+      "schema": "TeamMember",
+      "description": "Role-based team members, invites, status, and permissions keyed by lowercase email"
+    },
+    "/system/{docId}": {
+      "schema": "SystemMeta",
+      "description": "System initialization metadata"
     },
     "/auditLogs/{logId}": {
       "schema": "AuditLog",

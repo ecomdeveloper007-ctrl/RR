@@ -1036,7 +1036,8 @@ export async function seedPaidAdsAndGlossaryIfNeeded(
 
 /**
  * Safe Initial Data Seeding Utility
- * Only creates records if collection or doc is missing. Requires admin authentication.
+ * Only creates records on first-ever database initialization (system/init does not exist)
+ * unless force=true is explicitly triggered by an admin.
  */
 export async function seedInitialDataIfNeeded(force = false): Promise<{ seeded: boolean; message: string }> {
   if (!auth.currentUser) {
@@ -1044,6 +1045,14 @@ export async function seedInitialDataIfNeeded(force = false): Promise<{ seeded: 
   }
 
   try {
+    const sysRef = doc(db, 'system', 'init');
+    if (!force) {
+      const sysSnap = await getDoc(sysRef);
+      if (sysSnap.exists() && sysSnap.data()?.seededOnce === true) {
+        return { seeded: false, message: 'Firestore already initialized.' };
+      }
+    }
+
     // 1. Site Settings
     const settingsRef = doc(db, 'siteSettings', 'global');
     const settingsSnap = await getDoc(settingsRef);
@@ -1131,6 +1140,18 @@ export async function seedInitialDataIfNeeded(force = false): Promise<{ seeded: 
         await setDoc(doc(db, 'testimonials', `testimonial_${i + 1}`), initialTestimonials[i]);
       }
     }
+
+    // Mark system as initialized so intentional deletions/edits are never overwritten
+    const nowIso = new Date().toISOString();
+    await setDoc(
+      sysRef,
+      {
+        seededOnce: true,
+        seededAt: nowIso,
+        updatedAt: nowIso,
+      },
+      { merge: true }
+    );
 
     return { seeded: true, message: 'All verified PJ portfolio data synchronized successfully with Firestore.' };
   } catch (error) {

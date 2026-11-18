@@ -27,8 +27,8 @@ import { AdminLogin } from './admin/AdminLogin';
 import type { ProjectItem, ResourceItem, VideoItem } from './types/portfolio';
 
 function PortfolioApp() {
-  const { isAdmin, user } = useAuth();
-  const { toastMessage, clearToast } = usePortfolio();
+  const { isAdmin, authError } = useAuth();
+  const { toastMessage, clearToast, showToast } = usePortfolio();
 
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -36,17 +36,30 @@ function PortfolioApp() {
   const [selectedResource, setSelectedResource] = useState<ResourceItem | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<VideoItem | null>(null);
 
+  // Immediately kick out active dashboard session if RBAC access is deactivated or revoked
+  useEffect(() => {
+    if (!isAdmin && isAdminOpen) {
+      setIsAdminOpen(false);
+      if (authError) {
+        showToast(authError, 'error');
+      }
+    }
+  }, [isAdmin, isAdminOpen, authError, showToast]);
+
   // Check URL path or hash for /pj-control or #pj-control (plus /admin and #admin fallback)
   useEffect(() => {
     const checkRoute = () => {
       const path = window.location.pathname.toLowerCase();
       const hash = window.location.hash.toLowerCase();
+      const params = new URLSearchParams(window.location.search);
+      const hasInvite = Boolean(params.get('invite'));
       const isPathAdmin = path.startsWith('/pj-control') || path.startsWith('/admin');
       const isHashAdmin = hash === '#pj-control' || hash === '#admin';
 
-      if (isPathAdmin || isHashAdmin) {
-        if (isAdmin || user) {
+      if (isPathAdmin || isHashAdmin || hasInvite) {
+        if (isAdmin) {
           setIsAdminOpen(true);
+          setIsLoginOpen(false);
         } else {
           setIsLoginOpen(true);
         }
@@ -60,7 +73,7 @@ function PortfolioApp() {
       window.removeEventListener('hashchange', checkRoute);
       window.removeEventListener('popstate', checkRoute);
     };
-  }, [isAdmin, user]);
+  }, [isAdmin]);
 
   const cleanAdminUrl = () => {
     if (window.location.hash === '#pj-control' || window.location.hash === '#admin') {

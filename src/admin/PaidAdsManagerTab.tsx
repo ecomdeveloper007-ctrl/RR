@@ -9,8 +9,12 @@ import {
   BookOpen,
   BarChart3,
   RefreshCw,
+  Loader2,
+  Lock,
 } from 'lucide-react';
 import { usePortfolio } from '../context/PortfolioContext';
+import { useAuth } from '../context/AuthContext';
+import { MediaUploadField } from './components/MediaUploadField';
 import type { PaidAdCaseStudyItem, AdGlossaryTermItem } from '../types/portfolio';
 
 export const PaidAdsManagerTab: React.FC = () => {
@@ -22,25 +26,41 @@ export const PaidAdsManagerTab: React.FC = () => {
     saveAdGlossaryTerm,
     deleteAdGlossaryTerm,
     syncPaidAdsDefaults,
+    showToast,
   } = usePortfolio();
+  const { canWrite, canDelete, isSuperAdmin } = useAuth();
 
   const [editingAd, setEditingAd] = useState<PaidAdCaseStudyItem | null>(null);
   const [editingTerm, setEditingTerm] = useState<AdGlossaryTermItem | null>(null);
+  const [isSavingAd, setIsSavingAd] = useState(false);
+  const [isSavingTerm, setIsSavingTerm] = useState(false);
 
   const sortedAds = [...paidAds].sort((a, b) => a.displayOrder - b.displayOrder);
   const sortedGlossary = [...adGlossary].sort((a, b) => a.displayOrder - b.displayOrder);
 
   const moveAdOrder = async (index: number, direction: -1 | 1) => {
+    if (!canWrite) return;
     const targetIndex = index + direction;
     if (targetIndex < 0 || targetIndex >= sortedAds.length) return;
     const current = sortedAds[index];
     const swap = sortedAds[targetIndex];
-    await savePaidAd({ ...current, displayOrder: swap.displayOrder });
-    await savePaidAd({ ...swap, displayOrder: current.displayOrder });
+    try {
+      await savePaidAd({ ...current, displayOrder: swap.displayOrder });
+      await savePaidAd({ ...swap, displayOrder: current.displayOrder });
+    } catch {
+      // Error surfaced via toast
+    }
   };
 
   return (
     <div className="space-y-10 max-w-5xl">
+      {!canWrite && (
+        <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 flex items-center gap-2.5 text-xs text-slate-300">
+          <Lock className="w-4 h-4 text-amber-400 shrink-0" />
+          <span>Read-only Viewer access: You can inspect campaign case studies and glossary items, but cannot modify or delete records.</span>
+        </div>
+      )}
+
       {/* Header Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-slate-800">
         <div>
@@ -53,64 +73,68 @@ export const PaidAdsManagerTab: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={() => {
-              if (
-                window.confirm(
-                  'Synchronize default Paid Ads case studies and 12 glossary terms into Firestore? Existing unrelated collections will not be modified.'
-                )
-              ) {
-                syncPaidAdsDefaults(true);
-              }
-            }}
-            className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 flex items-center gap-1.5"
-          >
-            <RefreshCw className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Sync Paid Ads Defaults</span>
-          </button>
+        {canWrite && (
+          <div className="flex flex-wrap items-center gap-2">
+            {isSuperAdmin && (
+              <button
+                type="button"
+                onClick={() => {
+                  if (
+                    window.confirm(
+                      'Synchronize default Paid Ads case studies and 12 glossary terms into Firestore? Existing unrelated collections will not be modified.'
+                    )
+                  ) {
+                    syncPaidAdsDefaults(true);
+                  }
+                }}
+                className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 flex items-center gap-1.5"
+              >
+                <RefreshCw className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Sync Paid Ads Defaults</span>
+              </button>
+            )}
 
-          <button
-            type="button"
-            onClick={() =>
-              setEditingAd({
-                clientName: '',
-                platform: 'Meta Ads',
-                objectiveLabel: 'Lead generation campaign',
-                destinationDisplay: '',
-                destinationUrl: 'https://',
-                achievedSummary: '',
-                heroStatValue: 0,
-                heroStatLabel: 'reported results',
-                metrics: [
-                  { value: '$0.00', label: 'Cost per result' },
-                  { value: '$0.00', label: 'Amount spent' },
-                  { value: '0', label: 'Impressions' },
-                  { value: '0', label: 'Reach' },
-                ],
-                budgetContext: '',
-                clientReality: '',
-                howAdsHelped: '',
-                whatThisMeans: '',
-                screenshotUrl: '',
-                screenshotAlt: '',
-                screenshotCaption: 'Campaign dashboard screenshot supplied by the campaign manager',
-                spotlightCaption: '',
-                displayOrder: paidAds.length + 1,
-                isPublished: true,
-              })
-            }
-            className="px-3.5 py-1.5 rounded-xl bg-[#10B981] hover:bg-[#059669] text-white text-xs font-semibold flex items-center gap-1.5 shadow-xs"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Add Paid Ad Study</span>
-          </button>
-        </div>
+            <button
+              type="button"
+              onClick={() =>
+                setEditingAd({
+                  clientName: '',
+                  platform: 'Meta Ads',
+                  objectiveLabel: 'Lead generation campaign',
+                  destinationDisplay: '',
+                  destinationUrl: 'https://',
+                  achievedSummary: '',
+                  heroStatValue: 0,
+                  heroStatLabel: 'reported results',
+                  metrics: [
+                    { value: '$0.00', label: 'Cost per result' },
+                    { value: '$0.00', label: 'Amount spent' },
+                    { value: '0', label: 'Impressions' },
+                    { value: '0', label: 'Reach' },
+                  ],
+                  budgetContext: '',
+                  clientReality: '',
+                  howAdsHelped: '',
+                  whatThisMeans: '',
+                  screenshotUrl: '',
+                  screenshotAlt: '',
+                  screenshotCaption: 'Campaign dashboard screenshot supplied by the campaign manager',
+                  spotlightCaption: '',
+                  displayOrder: paidAds.length + 1,
+                  isPublished: true,
+                })
+              }
+              className="px-3.5 py-1.5 rounded-xl bg-[#10B981] hover:bg-[#059669] text-white text-xs font-semibold flex items-center gap-1.5 shadow-xs"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Add Paid Ad Study</span>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Add / Edit Paid Ad Case Study Form */}
-      {editingAd && (
+      {editingAd && canWrite && (
         <div className="p-6 rounded-2xl bg-slate-950 border border-emerald-500/50 space-y-5 shadow-xl">
           <div className="flex items-center justify-between border-b border-slate-800 pb-3">
             <h4 className="font-bold text-sm text-white">
@@ -325,20 +349,23 @@ export const PaidAdsManagerTab: React.FC = () => {
 
           {/* Screenshot / Spotlight Panel Settings */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <MediaUploadField
+              label="Dashboard Screenshot (Firebase Storage Upload or Path)"
+              value={editingAd.screenshotUrl || ''}
+              storagePath={editingAd.storagePath}
+              folder="paid-ads"
+              acceptedCategory="image"
+              placeholder="/images/ads/sherria-cotton-meta-ads.png"
+              onChange={(url, newPath) =>
+                setEditingAd({
+                  ...editingAd,
+                  screenshotUrl: url,
+                  storagePath: newPath,
+                })
+              }
+            />
             <div>
-              <label className="block text-xs text-slate-400 mb-1">
-                Dashboard Screenshot Path / URL (leave blank to use Spotlight)
-              </label>
-              <input
-                type="text"
-                value={editingAd.screenshotUrl || ''}
-                onChange={(e) => setEditingAd({ ...editingAd, screenshotUrl: e.target.value })}
-                placeholder="/images/ads/sherria-cotton-meta-ads.png"
-                className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white"
-              />
-            </div>
-            <div>
-              <label className="block text-xs text-slate-400 mb-1">
+              <label className="block text-xs font-semibold text-slate-300 mb-2">
                 Spotlight Caption (if no screenshot)
               </label>
               <input
@@ -354,6 +381,7 @@ export const PaidAdsManagerTab: React.FC = () => {
           <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
             <button
               type="button"
+              disabled={isSavingAd}
               onClick={() => setEditingAd(null)}
               className="px-4 py-2 rounded-xl bg-slate-800 text-xs text-slate-300 font-semibold"
             >
@@ -361,15 +389,26 @@ export const PaidAdsManagerTab: React.FC = () => {
             </button>
             <button
               type="button"
+              disabled={isSavingAd}
               onClick={async () => {
-                if (!editingAd.clientName) return;
-                await savePaidAd(editingAd);
-                setEditingAd(null);
+                if (!editingAd.clientName.trim() || !editingAd.achievedSummary.trim()) {
+                  showToast('Client name and achieved summary are required.', 'error');
+                  return;
+                }
+                setIsSavingAd(true);
+                try {
+                  await savePaidAd(editingAd);
+                  setEditingAd(null);
+                } catch {
+                  // Toast already shown
+                } finally {
+                  setIsSavingAd(false);
+                }
               }}
-              className="px-5 py-2 rounded-xl bg-[#10B981] hover:bg-[#059669] text-xs font-semibold text-white flex items-center gap-1.5"
+              className="px-5 py-2 rounded-xl bg-[#10B981] hover:bg-[#059669] text-xs font-semibold text-white flex items-center gap-1.5 disabled:opacity-60"
             >
-              <Save className="w-3.5 h-3.5" />
-              <span>Save Campaign Study</span>
+              {isSavingAd ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+              <span>{isSavingAd ? 'Saving...' : 'Save Campaign Study'}</span>
             </button>
           </div>
         </div>
@@ -383,26 +422,28 @@ export const PaidAdsManagerTab: React.FC = () => {
             className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
           >
             <div className="flex items-center gap-3 min-w-0">
-              <div className="flex flex-col gap-1 shrink-0">
-                <button
-                  type="button"
-                  disabled={idx === 0}
-                  onClick={() => moveAdOrder(idx, -1)}
-                  className="p-1 rounded bg-slate-900 text-slate-400 hover:text-white disabled:opacity-30"
-                  title="Move up"
-                >
-                  <ArrowUp className="w-3 h-3" />
-                </button>
-                <button
-                  type="button"
-                  disabled={idx === sortedAds.length - 1}
-                  onClick={() => moveAdOrder(idx, 1)}
-                  className="p-1 rounded bg-slate-900 text-slate-400 hover:text-white disabled:opacity-30"
-                  title="Move down"
-                >
-                  <ArrowDown className="w-3 h-3" />
-                </button>
-              </div>
+              {canWrite && (
+                <div className="flex flex-col gap-1 shrink-0">
+                  <button
+                    type="button"
+                    disabled={idx === 0}
+                    onClick={() => moveAdOrder(idx, -1)}
+                    className="p-1 rounded bg-slate-900 text-slate-400 hover:text-white disabled:opacity-30"
+                    title="Move up"
+                  >
+                    <ArrowUp className="w-3 h-3" />
+                  </button>
+                  <button
+                    type="button"
+                    disabled={idx === sortedAds.length - 1}
+                    onClick={() => moveAdOrder(idx, 1)}
+                    className="p-1 rounded bg-slate-900 text-slate-400 hover:text-white disabled:opacity-30"
+                    title="Move down"
+                  >
+                    <ArrowDown className="w-3 h-3" />
+                  </button>
+                </div>
+              )}
 
               {ad.screenshotUrl ? (
                 <img
@@ -444,33 +485,38 @@ export const PaidAdsManagerTab: React.FC = () => {
             <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
               <button
                 type="button"
-                onClick={() => savePaidAd({ ...ad, isPublished: !ad.isPublished })}
+                disabled={!canWrite}
+                onClick={() => savePaidAd({ ...ad, isPublished: !ad.isPublished }).catch(() => {})}
                 className={`px-2.5 py-1 rounded-lg text-xs font-semibold ${
                   ad.isPublished
                     ? 'bg-emerald-950 text-emerald-300 border border-emerald-800'
                     : 'bg-slate-900 text-slate-400 border border-slate-800'
-                }`}
+                } disabled:opacity-60`}
               >
                 {ad.isPublished ? 'Published' : 'Hidden'}
               </button>
-              <button
-                type="button"
-                onClick={() => setEditingAd(ad)}
-                className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200"
-              >
-                Edit
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  if (ad.id && window.confirm(`Delete "${ad.clientName}" Paid Ad case study?`)) {
-                    deletePaidAd(ad.id);
-                  }
-                }}
-                className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-slate-900"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-              </button>
+              {canWrite && (
+                <button
+                  type="button"
+                  onClick={() => setEditingAd(ad)}
+                  className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200"
+                >
+                  Edit
+                </button>
+              )}
+              {canDelete && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (ad.id && window.confirm(`Delete "${ad.clientName}" Paid Ad case study?`)) {
+                      deletePaidAd(ad.id).catch(() => {});
+                    }
+                  }}
+                  className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-slate-900"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              )}
             </div>
           </div>
         ))}
@@ -488,24 +534,26 @@ export const PaidAdsManagerTab: React.FC = () => {
               Plain-language explanations displayed in the &ldquo;How to read a campaign result&rdquo; section.
             </p>
           </div>
-          <button
-            type="button"
-            onClick={() =>
-              setEditingTerm({
-                term: '',
-                definition: '',
-                displayOrder: adGlossary.length + 1,
-                isPublished: true,
-              })
-            }
-            className="px-3.5 py-1.5 rounded-xl bg-[#10B981] hover:bg-[#059669] text-white text-xs font-semibold flex items-center gap-1.5"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span>Add Glossary Term</span>
-          </button>
+          {canWrite && (
+            <button
+              type="button"
+              onClick={() =>
+                setEditingTerm({
+                  term: '',
+                  definition: '',
+                  displayOrder: adGlossary.length + 1,
+                  isPublished: true,
+                })
+              }
+              className="px-3.5 py-1.5 rounded-xl bg-[#10B981] hover:bg-[#059669] text-white text-xs font-semibold flex items-center gap-1.5"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>Add Glossary Term</span>
+            </button>
+          )}
         </div>
 
-        {editingTerm && (
+        {editingTerm && canWrite && (
           <div className="p-5 rounded-2xl bg-slate-950 border border-emerald-500/50 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="sm:col-span-2">
@@ -544,6 +592,7 @@ export const PaidAdsManagerTab: React.FC = () => {
             <div className="flex justify-end gap-2">
               <button
                 type="button"
+                disabled={isSavingTerm}
                 onClick={() => setEditingTerm(null)}
                 className="px-3 py-1.5 rounded-lg bg-slate-800 text-xs text-slate-300"
               >
@@ -551,14 +600,26 @@ export const PaidAdsManagerTab: React.FC = () => {
               </button>
               <button
                 type="button"
+                disabled={isSavingTerm}
                 onClick={async () => {
-                  if (!editingTerm.term || !editingTerm.definition) return;
-                  await saveAdGlossaryTerm(editingTerm);
-                  setEditingTerm(null);
+                  if (!editingTerm.term.trim() || !editingTerm.definition.trim()) {
+                    showToast('Both term and definition are required.', 'error');
+                    return;
+                  }
+                  setIsSavingTerm(true);
+                  try {
+                    await saveAdGlossaryTerm(editingTerm);
+                    setEditingTerm(null);
+                  } catch {
+                    // Toast shown
+                  } finally {
+                    setIsSavingTerm(false);
+                  }
                 }}
-                className="px-4 py-1.5 rounded-lg bg-[#10B981] text-xs font-semibold text-white"
+                className="px-4 py-1.5 rounded-lg bg-[#10B981] text-xs font-semibold text-white inline-flex items-center gap-1.5 disabled:opacity-60"
               >
-                Save Term
+                {isSavingTerm && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                <span>{isSavingTerm ? 'Saving...' : 'Save Term'}</span>
               </button>
             </div>
           </div>
@@ -580,33 +641,38 @@ export const PaidAdsManagerTab: React.FC = () => {
               <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-900">
                 <button
                   type="button"
-                  onClick={() => saveAdGlossaryTerm({ ...item, isPublished: !item.isPublished })}
+                  disabled={!canWrite}
+                  onClick={() => saveAdGlossaryTerm({ ...item, isPublished: !item.isPublished }).catch(() => {})}
                   className={`px-2 py-0.5 rounded text-[10px] font-semibold ${
                     item.isPublished
                       ? 'bg-emerald-950 text-emerald-300'
                       : 'bg-slate-900 text-slate-400'
-                  }`}
+                  } disabled:opacity-60`}
                 >
                   {item.isPublished ? 'Active' : 'Hidden'}
                 </button>
-                <button
-                  type="button"
-                  onClick={() => setEditingTerm(item)}
-                  className="px-2 py-0.5 rounded bg-slate-800 text-[11px] text-slate-300"
-                >
-                  Edit
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (item.id && window.confirm(`Delete glossary term "${item.term}"?`)) {
-                      deleteAdGlossaryTerm(item.id);
-                    }
-                  }}
-                  className="p-1 text-slate-500 hover:text-rose-400"
-                >
-                  <Trash2 className="w-3 h-3" />
-                </button>
+                {canWrite && (
+                  <button
+                    type="button"
+                    onClick={() => setEditingTerm(item)}
+                    className="px-2 py-0.5 rounded bg-slate-800 text-[11px] text-slate-300"
+                  >
+                    Edit
+                  </button>
+                )}
+                {canDelete && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (item.id && window.confirm(`Delete glossary term "${item.term}"?`)) {
+                        deleteAdGlossaryTerm(item.id).catch(() => {});
+                      }
+                    }}
+                    className="p-1 text-slate-500 hover:text-rose-400"
+                  >
+                    <Trash2 className="w-3 h-3" />
+                  </button>
+                )}
               </div>
             </div>
           ))}
