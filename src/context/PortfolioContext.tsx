@@ -12,6 +12,7 @@ import {
   orderBy,
 } from 'firebase/firestore';
 import { db, testConnection, auth } from '../firebase/config';
+import firebaseConfig from '../../firebase-applet-config.json';
 import { deleteStorageObject } from '../firebase/storage';
 import { handleFirestoreError, OperationType } from '../firebase/errors';
 import { useAuth } from './AuthContext';
@@ -227,6 +228,52 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   // Initialize connection & public Firestore real-time listeners
   useEffect(() => {
     let isMounted = true;
+    let hasLiveHeroSnapshot = false;
+
+    async function prefetchHeroFast() {
+      try {
+        const restUrl = `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/${firebaseConfig.firestoreDatabaseId}/documents/hero/main`;
+        const res = await fetch(restUrl, { method: 'GET', cache: 'no-store' });
+        if (!res.ok) return;
+        const json = (await res.json()) as {
+          fields?: Record<string, { stringValue?: string; booleanValue?: boolean }>;
+        };
+        if (!json.fields || hasLiveHeroSnapshot || !isMounted) return;
+
+        const fields = json.fields;
+        const parsedHero: HeroData = {
+          ...initialHeroData,
+          ...(fields.headline?.stringValue !== undefined ? { headline: fields.headline.stringValue } : {}),
+          ...(fields.subtitle?.stringValue !== undefined ? { subtitle: fields.subtitle.stringValue } : {}),
+          ...(fields.description?.stringValue !== undefined ? { description: fields.description.stringValue } : {}),
+          ...(fields.profileImageUrl?.stringValue !== undefined
+            ? { profileImageUrl: fields.profileImageUrl.stringValue }
+            : {}),
+          ...(fields.storagePath?.stringValue !== undefined ? { storagePath: fields.storagePath.stringValue } : {}),
+          ...(fields.ctaTextWork?.stringValue !== undefined ? { ctaTextWork: fields.ctaTextWork.stringValue } : {}),
+          ...(fields.ctaUrlWork?.stringValue !== undefined ? { ctaUrlWork: fields.ctaUrlWork.stringValue } : {}),
+          ...(fields.ctaTextContact?.stringValue !== undefined
+            ? { ctaTextContact: fields.ctaTextContact.stringValue }
+            : {}),
+          ...(fields.ctaUrlContact?.stringValue !== undefined
+            ? { ctaUrlContact: fields.ctaUrlContact.stringValue }
+            : {}),
+          ...(fields.resumeUrl?.stringValue !== undefined ? { resumeUrl: fields.resumeUrl.stringValue } : {}),
+          ...(fields.yearsIt?.stringValue !== undefined ? { yearsIt: fields.yearsIt.stringValue } : {}),
+          ...(fields.yearsPm?.stringValue !== undefined ? { yearsPm: fields.yearsPm.stringValue } : {}),
+          ...(fields.projectsDelivered?.stringValue !== undefined
+            ? { projectsDelivered: fields.projectsDelivered.stringValue }
+            : {}),
+          ...(fields.teamSizeLed?.stringValue !== undefined ? { teamSizeLed: fields.teamSizeLed.stringValue } : {}),
+          ...(fields.isVisible?.booleanValue !== undefined ? { isVisible: fields.isVisible.booleanValue } : {}),
+        };
+
+        setHero(parsedHero);
+        setIsHeroReady(true);
+      } catch {
+        // Fallback smoothly to onSnapshot listener
+      }
+    }
 
     async function init() {
       try {
@@ -249,11 +296,12 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       }
     }
 
+    prefetchHeroFast();
     init();
 
     const heroFallbackTimer = window.setTimeout(() => {
       if (isMounted) setIsHeroReady(true);
-    }, 3000);
+    }, 1500);
 
     const unsubSystem = onSnapshot(
       doc(db, 'system', 'init'),
@@ -279,6 +327,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const unsubHero = onSnapshot(
       doc(db, 'hero', 'main'),
       (snap) => {
+        hasLiveHeroSnapshot = true;
         window.clearTimeout(heroFallbackTimer);
         if (snap.exists()) {
           setHero(snap.data() as HeroData);
@@ -289,6 +338,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         }
       },
       (error) => {
+        hasLiveHeroSnapshot = true;
         window.clearTimeout(heroFallbackTimer);
         if (isMounted) setIsHeroReady(true);
         console.warn('hero listener error:', error);

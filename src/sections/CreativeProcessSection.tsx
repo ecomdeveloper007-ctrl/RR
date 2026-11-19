@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'motion/react';
 import {
   Search,
   BarChart3,
@@ -8,7 +7,6 @@ import {
   Zap,
   RefreshCw,
   CheckCircle2,
-  ArrowRight,
 } from 'lucide-react';
 import { usePortfolio } from '../context/PortfolioContext';
 
@@ -25,71 +23,66 @@ export const CreativeProcessSection: React.FC = () => {
   const { creativeProcess } = usePortfolio();
 
   return (
-    <section id="process" className="py-10 sm:py-12 lg:py-16 bg-[#F3F7F5] border-t border-slate-200/80">
+    <section id="process" className="py-8 sm:py-10 bg-[#F3F7F5] border-t border-[#E2E8F0]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="max-w-3xl mb-8 sm:mb-10">
-          <div className="inline-flex items-center gap-2 text-xs font-bold text-emerald-800 tracking-wider uppercase bg-emerald-100/80 px-3 py-1 rounded-full border border-emerald-300/60 mb-2.5">
-            <RefreshCw className="w-3.5 h-3.5 text-emerald-600" />
-            Execution Methodology
+        {/* Compact Section Header */}
+        <div className="max-w-2xl space-y-1 mb-5 sm:mb-6">
+          <div className="flex items-center gap-2 text-xs font-semibold text-[#059669] tabular-nums">
+            <span>Execution Methodology</span>
+            <span aria-hidden="true" className="text-slate-400">·</span>
+            <span className="text-[#64748B] font-medium">
+              {creativeProcess.length}-Stage Workflow
+            </span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#111827] tracking-tight">
-            The 6-Stage Creative & Strategic Growth Process
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#111827] tracking-tight [text-wrap:balance]">
+            Creative &amp; Strategic Growth Process
           </h2>
-          <p className="mt-3 text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
-            A battle-tested workflow engineered to eliminate guesswork, accelerate turnaround, and deliver compounding digital momentum.
+          <p className="text-xs sm:text-sm text-[#64748B] leading-relaxed font-normal">
+            A structured workflow engineered to eliminate guesswork and deliver compounding digital momentum.
           </p>
         </div>
 
-        {/* 6 Process Stages Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+        {/* Compact Process Stages Grid: Swipeable on mobile, 2 cols tablet, 3 cols desktop */}
+        <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-3.5 overflow-x-auto no-scrollbar snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0 pb-1 sm:pb-0">
           {creativeProcess.map((stage) => {
             const IconComp = processIcons[stage.iconName] || TrendingUp;
 
             return (
-              <motion.div
+              <article
                 key={stage.id || stage.stepNumber}
-                whileHover={{ y: -4 }}
-                transition={{ duration: 0.2 }}
-                className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-xl hover:border-emerald-300 transition-all flex flex-col justify-between"
+                className="min-w-[78%] sm:min-w-0 snap-start bg-white p-4 rounded-2xl border border-[#E2E8F0] hover:border-[#10B981]/60 transition-colors flex flex-col justify-between gap-3"
               >
-                <div>
-                  <div className="flex items-center justify-between mb-5">
-                    <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100 shadow-xs">
-                      <IconComp className="w-6 h-6" />
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-[#D1FAE5]/60 text-[#059669] flex items-center justify-center">
+                      <IconComp className="w-4 h-4" />
                     </div>
-                    <span className="text-2xl font-extrabold text-slate-200 tracking-tight">
-                      0{stage.stepNumber}
+                    <span className="text-xs font-bold text-[#059669] tabular-nums">
+                      Step 0{stage.stepNumber}
                     </span>
                   </div>
 
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">
+                  <h3 className="text-sm sm:text-[15px] font-bold text-[#111827] leading-snug">
                     {stage.title}
                   </h3>
 
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal mb-5">
+                  <p className="text-xs text-[#64748B] leading-relaxed font-normal line-clamp-2">
                     {stage.shortDesc}
                   </p>
+                </div>
 
-                  {/* Deliverables bullets */}
-                  <div className="space-y-2 pt-4 border-t border-slate-100">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
-                      Key Deliverables:
-                    </span>
+                {/* Compact Deliverables */}
+                {stage.deliverables && stage.deliverables.length > 0 && (
+                  <div className="space-y-1 pt-2.5 border-t border-slate-100">
                     {stage.deliverables.map((del, dIdx) => (
-                      <div key={dIdx} className="flex items-start gap-2 text-xs text-slate-700">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                        <span>{del}</span>
+                      <div key={dIdx} className="flex items-start gap-1.5 text-[11px] text-[#334155]">
+                        <CheckCircle2 className="w-3 h-3 text-[#10B981] shrink-0 mt-0.5" />
+                        <span className="leading-snug">{del}</span>
                       </div>
                     ))}
                   </div>
-                </div>
-
-                <div className="mt-6 pt-3 text-[11px] font-semibold text-emerald-700 flex items-center gap-1">
-                  <span>Stage {stage.stepNumber} of 6</span>
-                  <ArrowRight className="w-3 h-3 text-emerald-600" />
-                </div>
-              </motion.div>
+                )}
+              </article>
             );
           })}
         </div>

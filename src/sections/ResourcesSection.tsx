@@ -1,24 +1,16 @@
 import React from 'react';
-import { motion } from 'motion/react';
 import {
   BookOpen,
   CheckCircle2,
   XCircle,
-  Globe,
-  Mail,
-  MessageCircle,
-  Target,
-  ArrowUpRight,
 } from 'lucide-react';
-import { usePortfolio } from '../context/PortfolioContext';
 import type { ResourceItem } from '../types/portfolio';
 
 interface ResourcesSectionProps {
   onSelectResource: (resource: ResourceItem) => void;
 }
 
-export const ResourcesSection: React.FC<ResourcesSectionProps> = ({ onSelectResource }) => {
-  const { resources } = usePortfolio();
+export const ResourcesSection: React.FC<ResourcesSectionProps> = () => {
 
   return (
     <section id="guide" className="py-10 sm:py-12 lg:py-16 bg-white border-t border-slate-100">
@@ -251,130 +243,6 @@ export const ResourcesSection: React.FC<ResourcesSectionProps> = ({ onSelectReso
                 <div className="font-bold text-xs text-white">{f.title}</div>
                 <div className="text-[11px] text-emerald-400">{f.action}</div>
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* SUBSECTION L & M: WEBSITE AS HOME BASE + MULTICHANNEL CHANNELS */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
-          {/* Website Home Base */}
-          <div className="p-5 sm:p-6 rounded-3xl bg-[#F3F7F5] border border-emerald-100 space-y-4">
-            <div className="flex items-center gap-2 text-slate-900 font-bold text-base">
-              <Globe className="w-5 h-5 text-emerald-600" />
-              <span>Website = Your Home Base (Module L)</span>
-            </div>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Social platforms are rented land where policies and algorithms change without warning. Your website is the permanent digital asset you own completely.
-            </p>
-            <div className="grid grid-cols-2 gap-3 text-xs text-slate-700 pt-2">
-              <div className="p-3 bg-white rounded-xl border border-slate-200">
-                <span className="font-bold text-slate-900 block">Professionalism</span>
-                <span className="text-[11px] text-slate-500">Instant commercial legitimacy</span>
-              </div>
-              <div className="p-3 bg-white rounded-xl border border-slate-200">
-                <span className="font-bold text-slate-900 block">Google Search</span>
-                <span className="text-[11px] text-slate-500">Inbound buyer discovery</span>
-              </div>
-              <div className="p-3 bg-white rounded-xl border border-slate-200">
-                <span className="font-bold text-slate-900 block">Lead Capture</span>
-                <span className="text-[11px] text-slate-500">Owned email/phone lists</span>
-              </div>
-              <div className="p-3 bg-white rounded-xl border border-slate-200">
-                <span className="font-bold text-slate-900 block">Platform-Proof</span>
-                <span className="text-[11px] text-slate-500">Zero algorithmic risk</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Email, WhatsApp & Paid Ads */}
-          <div className="p-7 rounded-3xl bg-[#F3F7F5] border border-emerald-100 space-y-4">
-            <div className="flex items-center gap-2 text-slate-900 font-bold text-base">
-              <Target className="w-5 h-5 text-emerald-600" />
-              <span>Email, WhatsApp & Paid Ads (Module M)</span>
-            </div>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Integrate complementary channels into an uninterrupted customer acquisition flywheel:
-            </p>
-            <div className="space-y-2.5 text-xs">
-              <div className="p-3 bg-white rounded-xl border border-slate-200 flex items-start gap-2.5">
-                <Mail className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                <div>
-                  <span className="font-bold text-slate-900 block">Email & Text</span>
-                  <span className="text-[11px] text-slate-600">
-                    Build owned audience lists, automate follow-ups, and deliver valuable offers.
-                  </span>
-                </div>
-              </div>
-
-              <div className="p-3 bg-white rounded-xl border border-slate-200 flex items-start gap-2.5">
-                <MessageCircle className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                <div>
-                  <span className="font-bold text-slate-900 block">WhatsApp Direct</span>
-                  <span className="text-[11px] text-slate-600">
-                    Rapid one-on-one conversational commerce, sharing product catalogues and closing warm deals.
-                  </span>
-                </div>
-              </div>
-
-              <div className="p-3 bg-white rounded-xl border border-slate-200 flex items-start gap-2.5">
-                <Target className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                <div>
-                  <span className="font-bold text-slate-900 block">Targeted Paid Ads</span>
-                  <span className="text-[11px] text-slate-600">
-                    Reach laser-targeted buyer cohorts, test creative variants, and scale predictable ROAS.
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Dynamic Starter Guide Chapters Grid */}
-        <div className="pt-2">
-          <div className="flex items-center justify-between mb-5">
-            <div>
-              <h3 className="text-xl font-bold text-slate-900">
-                Full Chapter Library & Downloads
-              </h3>
-              <p className="text-xs text-slate-500">
-                Click any chapter to read in-depth playbooks and takeaways in an in-page overlay.
-              </p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-            {resources.map((item, idx) => (
-              <motion.div
-                key={item.id || idx}
-                whileHover={{ y: -4 }}
-                transition={{ duration: 0.2 }}
-                onClick={() => onSelectResource(item)}
-                className="bg-[#F3F7F5] rounded-3xl p-6 border border-emerald-100/80 shadow-xs hover:shadow-md hover:border-emerald-300 transition-all flex flex-col justify-between cursor-pointer group"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full">
-                      Module {item.subsectionKey || idx + 1}
-                    </span>
-                    <span className="text-xs text-slate-400 font-mono">0{idx + 1}</span>
-                  </div>
-
-                  <h4 className="text-base font-bold text-slate-900 group-hover:text-emerald-700 transition-colors mb-2">
-                    {item.title}
-                  </h4>
-
-                  <p className="text-xs text-slate-600 leading-relaxed line-clamp-3">
-                    {item.shortDescription}
-                  </p>
-                </div>
-
-                <div className="mt-5 pt-4 border-t border-emerald-200/60 flex items-center justify-between">
-                  <span className="text-xs font-bold text-emerald-700 flex items-center gap-1">
-                    Read Chapter <ArrowUpRight className="w-3.5 h-3.5" />
-                  </span>
-                  <span className="text-[11px] text-slate-500 font-medium">In-Page Reader</span>
-                </div>
-              </motion.div>
             ))}
           </div>
         </div>

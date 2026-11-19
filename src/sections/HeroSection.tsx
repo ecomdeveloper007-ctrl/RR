@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion } from 'motion/react';
-import { ArrowUpRight, CheckCircle2, Sparkles, MessageCircle, Play } from 'lucide-react';
+import { ArrowUpRight, Play } from 'lucide-react';
 import { usePortfolio } from '../context/PortfolioContext';
 
 const DEFAULT_HERO_IMAGE =
@@ -9,17 +8,28 @@ const DEFAULT_HERO_IMAGE =
 export const HeroSection: React.FC = () => {
   const { hero, isHeroReady, siteSettings } = usePortfolio();
   const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const [isCompactPortrait, setIsCompactPortrait] = useState(false);
   const imgRef = useRef<HTMLImageElement | null>(null);
 
   const heroImageSrc = isHeroReady
     ? hero.profileImageUrl || DEFAULT_HERO_IMAGE
     : '';
 
+  const evaluateImageDimensions = (img: HTMLImageElement) => {
+    const w = img.naturalWidth;
+    const h = img.naturalHeight;
+    // Prevent upscaling blur when source image is smaller than the card
+    setIsCompactPortrait(w > 0 && (w < 450 || h < 450));
+    setIsImageLoaded(true);
+  };
+
   useEffect(() => {
-    if (heroImageSrc && imgRef.current?.complete && imgRef.current.naturalWidth > 0) {
-      setIsImageLoaded(true);
+    const img = imgRef.current;
+    if (heroImageSrc && img?.complete && img.naturalWidth > 0) {
+      evaluateImageDimensions(img);
     } else {
       setIsImageLoaded(false);
+      setIsCompactPortrait(false);
     }
   }, [heroImageSrc]);
 
@@ -37,143 +47,124 @@ export const HeroSection: React.FC = () => {
   return (
     <section
       id="home"
-      className="relative pt-24 pb-10 lg:pt-28 lg:pb-14 overflow-hidden bg-gradient-to-b from-[#F3F7F5] via-white to-white"
+      className="relative pt-20 pb-8 lg:pt-24 lg:pb-10 overflow-hidden bg-gradient-to-b from-[#F3F7F5] via-white to-white"
     >
-      {/* Subtle emerald atmospheric background glow */}
-      <div className="absolute top-0 right-1/4 -z-10 w-96 h-96 bg-emerald-200/30 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-1/3 left-10 -z-10 w-72 h-72 bg-teal-100/40 rounded-full blur-2xl pointer-events-none" />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          {/* Left Column: Positioning & CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-            className="lg:col-span-7 space-y-4 sm:space-y-5"
-          >
-            {/* Small Label */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-100/80 border border-emerald-300/60 text-emerald-900 text-xs font-bold tracking-wider uppercase shadow-xs">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>{hero.subtitle || 'SOCIAL MEDIA MARKETING & DIGITAL GROWTH'}</span>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
+          {/* Left Column: Compact Positioning & CTAs */}
+          <div className="lg:col-span-7 space-y-3.5 sm:space-y-4">
+            <div className="text-xs font-semibold text-[#059669] tracking-wide">
+              {hero.subtitle || 'Social Media Marketing & Digital Growth'}
             </div>
 
-            {/* Main Headline */}
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#111827] tracking-tight leading-[1.15] [text-wrap:balance]">
+            <h1 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-extrabold text-[#111827] tracking-tight leading-[1.12] [text-wrap:balance]">
               Making Brands{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700">
+              <span className="text-[#059669]">
                 Impossible to Ignore.
               </span>
             </h1>
 
-            {/* Supporting Description */}
-            <p className="text-base sm:text-lg text-[#64748B] leading-relaxed max-w-2xl font-normal">
+            <p className="text-sm sm:text-base text-[#64748B] leading-relaxed max-w-xl font-normal">
               {hero.description ||
                 'I help businesses build a stronger digital presence through creative social media content, strategic marketing, audience engagement, SEO, and conversion-focused digital solutions.'}
             </p>
 
-            {/* Action Buttons */}
-            <div className="pt-2 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+            {/* Compact Action Buttons */}
+            <div className="pt-1 flex flex-wrap items-center gap-2.5 sm:gap-3">
               <a
                 href={hero.ctaUrlWork || '#portfolio'}
-                className="w-full sm:w-auto min-h-[48px] inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-[#10B981] text-white font-semibold text-sm hover:bg-[#059669] shadow-lg shadow-emerald-500/25 transition-all duration-200 active:scale-95"
+                className="min-h-[42px] inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#10B981] text-white font-semibold text-xs hover:bg-[#059669] transition-colors active:scale-95 whitespace-nowrap"
               >
                 <span>{hero.ctaTextWork || 'Explore My Work'}</span>
-                <ArrowUpRight className="w-4 h-4" />
+                <ArrowUpRight className="w-3.5 h-3.5" />
               </a>
 
               <a
                 href={siteSettings.fiverrUrl || 'https://www.fiverr.com/pjangid'}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto min-h-[48px] inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-white text-[#111827] border border-[#E2E8F0] font-semibold text-sm hover:bg-[#F3F7F5] hover:border-slate-300 transition-all duration-200 active:scale-95 shadow-xs"
+                className="min-h-[42px] inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl bg-white text-[#111827] border border-[#E2E8F0] font-semibold text-xs hover:bg-[#F3F7F5] hover:border-slate-300 transition-colors active:scale-95 whitespace-nowrap"
               >
                 <span>Hire Me on Fiverr</span>
-                <ArrowUpRight className="w-4 h-4 text-[#10B981]" />
+                <ArrowUpRight className="w-3.5 h-3.5 text-[#10B981]" />
               </a>
 
               <a
                 href="#videos"
-                className="w-full sm:w-auto min-h-[44px] inline-flex items-center justify-center sm:justify-start gap-2 px-4 py-2 text-xs font-semibold text-[#64748B] hover:text-[#10B981] transition-colors"
+                className="min-h-[40px] inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-[#64748B] hover:text-[#10B981] transition-colors whitespace-nowrap"
               >
-                <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700">
+                <span className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 shrink-0">
                   <Play className="w-3 h-3 fill-current ml-0.5" />
-                </div>
+                </span>
                 <span>Watch Showreel</span>
               </a>
             </div>
 
-            {/* Supported Social Platforms Ribbon */}
-            <div className="pt-4 border-t border-[#E2E8F0] space-y-2">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[#64748B] block">
-                Cross-Platform Growth Ecosystem:
-              </span>
-              <div className="flex flex-wrap items-center gap-2">
-                {platforms.map((p, idx) => (
-                  <span
-                    key={idx}
-                    className="text-xs font-medium px-3 py-1 rounded-full bg-white border border-[#E2E8F0] text-[#111827] shadow-xs"
-                  >
-                    {p}
-                  </span>
-                ))}
-              </div>
+            {/* Compact Cross-Platform Line */}
+            <div className="pt-3 border-t border-[#E2E8F0] flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
+              <span className="font-semibold text-[#111827]">Platforms:</span>
+              <span className="text-[#64748B]">{platforms.join(' · ')}</span>
             </div>
-          </motion.div>
+          </div>
 
-          {/* Right Column: Visual Brand Representation */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="lg:col-span-5 flex justify-center lg:justify-end"
-          >
-            <div className="relative w-full max-w-sm sm:max-w-md">
-              <div className="absolute -inset-2 bg-gradient-to-tr from-emerald-500/20 to-teal-400/20 rounded-3xl blur-lg" />
+          {/* Right Column: Compact Brand Portrait Card */}
+          <div className="lg:col-span-5 flex justify-center lg:justify-end">
+            <div className="w-full max-w-xs sm:max-w-sm bg-white p-2.5 rounded-2xl border border-[#E2E8F0] shadow-sm">
+              <div className="relative h-64 sm:h-72 rounded-xl overflow-hidden bg-gradient-to-br from-slate-900 via-[#0d2822] to-emerald-950 flex items-center justify-center">
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-0 bg-[radial-gradient(circle_at_50%_38%,rgba(16,185,129,0.22),transparent_65%)] pointer-events-none"
+                />
 
-              <div className="relative bg-white p-3 rounded-3xl shadow-xl border border-[#E2E8F0]">
-                <div className="relative h-96 sm:h-[420px] rounded-2xl overflow-hidden bg-slate-900">
-                  {(!heroImageSrc || !isImageLoaded) && (
-                    <div
-                      aria-hidden="true"
-                      className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 animate-pulse"
-                    />
-                  )}
-                  {heroImageSrc && (
+                {(!heroImageSrc || !isImageLoaded) && (
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 animate-pulse"
+                  />
+                )}
+
+                {heroImageSrc && (
+                  <div
+                    className={
+                      isCompactPortrait
+                        ? 'relative -mt-12 sm:-mt-10 w-36 h-36 sm:w-44 sm:h-44 rounded-2xl overflow-hidden border-2 border-emerald-400/50 shadow-xl ring-2 ring-emerald-500/15 bg-slate-800'
+                        : 'w-full h-full'
+                    }
+                  >
                     <img
                       ref={imgRef}
                       src={heroImageSrc}
                       alt="PJ - Social Media Marketing & Digital Growth"
-                      onLoad={() => setIsImageLoaded(true)}
+                      referrerPolicy="no-referrer"
+                      loading="eager"
+                      decoding="async"
+                      fetchPriority="high"
+                      onLoad={(e) => evaluateImageDimensions(e.currentTarget)}
                       onError={() => setIsImageLoaded(true)}
-                      className={`w-full h-full object-cover object-top transition-opacity duration-300 ${
+                      className={`w-full h-full object-cover object-top transition-opacity duration-150 ${
                         isImageLoaded ? 'opacity-100' : 'opacity-0'
                       }`}
                     />
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex items-end p-6">
-                    <div className="text-white space-y-0.5">
-                      <div className="text-xl font-bold tracking-tight">PJ</div>
-                      <div className="text-xs text-emerald-400 font-medium">
-                        Creative Storyteller & Digital Growth Strategist
-                      </div>
-                    </div>
                   </div>
-                </div>
+                )}
 
-                {/* Floating pill badge */}
-                <div className="absolute bottom-2 sm:-bottom-4 left-2 sm:-left-4 max-w-[calc(100%-16px)] bg-white/95 backdrop-blur-md border border-[#E2E8F0] rounded-2xl p-3 shadow-lg flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-[#10B981] text-white flex items-center justify-center font-bold text-sm shrink-0">
-                    PJ
-                  </div>
-                  <div className="min-w-0">
-                    <div className="text-xs font-bold text-[#111827] truncate">Strategic Marketing</div>
-                    <div className="text-[11px] text-[#64748B] font-medium truncate">Measurable Outcomes</div>
+                <div
+                  className={`absolute inset-0 flex items-end p-4 pointer-events-none ${
+                    isCompactPortrait
+                      ? 'bg-gradient-to-t from-slate-950/90 via-transparent to-transparent justify-center text-center'
+                      : 'bg-gradient-to-t from-slate-950/80 via-transparent to-transparent'
+                  }`}
+                >
+                  <div className="text-white space-y-0.5">
+                    <div className="text-base font-bold tracking-tight">PJ</div>
+                    <div className="text-[11px] text-emerald-300 font-medium">
+                      Creative Storyteller &amp; Digital Growth Strategist
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
