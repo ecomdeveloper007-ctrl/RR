@@ -76,7 +76,7 @@ export const Navbar: React.FC = () => {
             </div>
             <div className="flex flex-col">
               <span className="font-extrabold text-base sm:text-lg tracking-tight text-[#111827] group-hover:text-[#10B981] transition-colors">
-                PJ
+                Patricia
               </span>
               <span className="text-[10px] font-semibold text-[#64748B] tracking-wider uppercase">
                 Digital Growth

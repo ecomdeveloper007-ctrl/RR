@@ -11,41 +11,42 @@ interface ResourcesSectionProps {
 }
 
 export const ResourcesSection: React.FC<ResourcesSectionProps> = () => {
-
   return (
-    <section id="guide" className="py-10 sm:py-12 lg:py-16 bg-white border-t border-slate-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10">
-        {/* Section Header */}
-        <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 text-xs font-bold text-emerald-800 tracking-wider uppercase bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 mb-2.5">
-            <BookOpen className="w-3.5 h-3.5 text-emerald-600" />
-            Social Media Starter Guide Playbook
+    <section id="guide" className="py-8 sm:py-10 bg-white border-t border-[#E2E8F0]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4 sm:space-y-5">
+        {/* Compact Section Header */}
+        <div className="max-w-2xl space-y-1">
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-[#059669]">
+            <BookOpen className="w-3.5 h-3.5 text-[#10B981] shrink-0" />
+            <span>Social Media Starter Guide</span>
+            <span aria-hidden="true" className="text-slate-400">·</span>
+            <span className="text-[#64748B] font-medium">16-Page Playbook</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#111827] tracking-tight">
-            The Complete 16-Page Social Media Blueprint, Reimagined
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#111827] tracking-tight [text-wrap:balance]">
+            The Complete Social Media Blueprint
           </h2>
-          <p className="mt-3 text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
-            Step-by-step methodologies on platform mechanics, business growth, content formats, safety standards, and converting followers into paying clients.
+          <p className="text-xs sm:text-sm text-[#64748B] leading-relaxed font-normal">
+            Platform mechanics, business growth, content standards, and converting followers into paying clients.
           </p>
         </div>
 
         {/* SUBSECTION A: WHAT IS SOCIAL MEDIA & POPULAR PLATFORMS */}
-        <div className="bg-[#F3F7F5] rounded-3xl p-5 sm:p-7 border border-emerald-100 space-y-5">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="bg-[#F3F7F5] rounded-2xl p-4 sm:p-5 border border-[#E2E8F0] space-y-3">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100/80 px-2.5 py-0.5 rounded-full">
-                Module A &bull; Core Foundations
+              <span className="text-[11px] font-semibold text-[#059669]">
+                Module A · Core Foundations
               </span>
-              <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mt-2">
-                What Is Social Media & Popular Platforms
+              <h3 className="text-base sm:text-lg font-bold text-[#111827]">
+                What Is Social Media &amp; Popular Platforms
               </h3>
             </div>
-            <p className="text-xs sm:text-sm text-slate-600 max-w-md">
-              Digital spaces where people share photos, videos, ideas, and messages — and where businesses meet ready buyers.
+            <p className="text-xs text-[#64748B] max-w-md">
+              Digital spaces where audiences discover brands and connect with businesses ready to serve them.
             </p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 pt-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-px bg-[#E2E8F0] rounded-xl border border-[#E2E8F0] overflow-hidden">
             {[
               { name: 'Instagram', role: 'Visuals & Reels', tag: 'Visual Commerce' },
               { name: 'Facebook', role: 'Communities & Ads', tag: 'Broad Reach' },
@@ -54,194 +55,197 @@ export const ResourcesSection: React.FC<ResourcesSectionProps> = () => {
               { name: 'X / Twitter', role: 'Real-Time Insights', tag: 'Conversation' },
               { name: 'LinkedIn', role: 'B2B & Partnerships', tag: 'Corporate' },
             ].map((p, i) => (
-              <div
-                key={i}
-                className="bg-white p-4 rounded-2xl border border-slate-200/80 text-center space-y-1 shadow-xs"
-              >
-                <div className="text-xs font-extrabold text-slate-900">{p.name}</div>
-                <div className="text-[11px] text-slate-500 font-medium">{p.role}</div>
-                <div className="text-[10px] text-emerald-700 font-semibold bg-emerald-50 py-0.5 rounded">
-                  {p.tag}
-                </div>
+              <div key={i} className="bg-white p-2.5 sm:p-3 space-y-0.5 min-w-0">
+                <div className="text-xs font-bold text-[#111827] truncate">{p.name}</div>
+                <div className="text-[11px] text-[#64748B] truncate">{p.role}</div>
+                <div className="text-[10px] font-semibold text-[#059669] truncate">{p.tag}</div>
               </div>
             ))}
           </div>
         </div>
 
         {/* SUBSECTIONS B, C, D: HOW IT WORKS, GROWTH FORMULA & BUSINESS VALUE */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
-          {/* How Social Media Actually Works */}
-          <div className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col justify-between">
-            <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-emerald-700">
-                Module B &bull; The Mechanics
-              </span>
-              <h4 className="text-lg font-bold text-slate-900 mt-1 mb-4">
-                How Social Media Actually Works
-              </h4>
-              <div className="space-y-3 text-xs text-slate-700">
+        <div className="flex md:grid md:grid-cols-3 gap-3.5 sm:gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory -mx-4 px-4 md:mx-0 md:px-0 pb-1 md:pb-0">
+          {/* Module B */}
+          <div className="min-w-[82%] sm:min-w-[46%] md:min-w-0 snap-start bg-white p-4 rounded-2xl border border-[#E2E8F0] flex flex-col justify-between gap-3">
+            <div className="space-y-2.5">
+              <div>
+                <span className="text-[11px] font-semibold text-[#059669]">
+                  Module B · The Mechanics
+                </span>
+                <h4 className="text-sm sm:text-[15px] font-bold text-[#111827]">
+                  How Social Media Actually Works
+                </h4>
+              </div>
+              <ol className="space-y-1.5 text-xs text-[#334155]">
                 {[
                   '1. Create Account: Sign up on your selected channel',
-                  '2. Post Content: Share engaging photos and videos',
-                  '3. Algorithm Distributes: Shown to relevant test viewers',
-                  '4. Engagement Grows: Interactions trigger expanded reach',
+                  '2. Post Content: Share engaging photos & videos',
+                  '3. Algorithm Distributes: Shown to test viewers',
+                  '4. Engagement Grows: Interactions expand reach',
                 ].map((step, sIdx) => (
-                  <div key={sIdx} className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 font-medium">
+                  <li key={sIdx} className="py-1.5 px-2.5 rounded-lg bg-[#F3F7F5] font-medium text-[11px]">
                     {step}
-                  </div>
+                  </li>
                 ))}
-              </div>
+              </ol>
             </div>
-            <div className="pt-4 border-t border-slate-100 mt-4 text-[11px] text-slate-500">
-              Engagement velocity directly multiplies organic distribution.
-            </div>
-          </div>
-
-          {/* The Growth Formula */}
-          <div className="bg-white p-7 rounded-3xl border border-slate-200 shadow-sm flex flex-col justify-between">
-            <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-emerald-700">
-                Module C &bull; The Equation
-              </span>
-              <h4 className="text-lg font-bold text-slate-900 mt-1 mb-4">
-                The Core Growth Formula
-              </h4>
-              <div className="space-y-3">
-                <div className="p-3 rounded-xl bg-emerald-50/70 border border-emerald-100">
-                  <div className="font-bold text-xs text-emerald-900">Good Content</div>
-                  <p className="text-[11px] text-emerald-800">Valuable, engaging, solution-oriented posts.</p>
-                </div>
-                <div className="p-3 rounded-xl bg-emerald-50/70 border border-emerald-100">
-                  <div className="font-bold text-xs text-emerald-900">Happy Customers</div>
-                  <p className="text-[11px] text-emerald-800">Satisfied followers who comment, save & share.</p>
-                </div>
-                <div className="p-3 rounded-xl bg-emerald-50/70 border border-emerald-100">
-                  <div className="font-bold text-xs text-emerald-900">Free Advertising</div>
-                  <p className="text-[11px] text-emerald-800">Algorithms reward engagement with compounding reach.</p>
-                </div>
-              </div>
-            </div>
-            <div className="pt-4 border-t border-slate-100 mt-4 text-[11px] text-slate-500">
-              Good Content + Happy Followers = Sustainable Inbound Growth.
+            <div className="pt-2 border-t border-slate-100 text-[11px] text-[#64748B]">
+              Engagement velocity multiplies organic reach.
             </div>
           </div>
 
-          {/* Social Media for Business */}
-          <div className="bg-white p-7 rounded-3xl border border-slate-200 shadow-sm flex flex-col justify-between">
-            <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-emerald-700">
-                Module D &bull; Commerce
-              </span>
-              <h4 className="text-lg font-bold text-slate-900 mt-1 mb-4">
-                Social Media for Business
-              </h4>
-              <ul className="space-y-2 text-xs text-slate-700">
+          {/* Module C */}
+          <div className="min-w-[82%] sm:min-w-[46%] md:min-w-0 snap-start bg-white p-4 rounded-2xl border border-[#E2E8F0] flex flex-col justify-between gap-3">
+            <div className="space-y-2.5">
+              <div>
+                <span className="text-[11px] font-semibold text-[#059669]">
+                  Module C · The Equation
+                </span>
+                <h4 className="text-sm sm:text-[15px] font-bold text-[#111827]">
+                  The Core Growth Formula
+                </h4>
+              </div>
+              <div className="space-y-1.5">
+                <div className="p-2 rounded-lg bg-[#F3F7F5]">
+                  <div className="font-bold text-xs text-[#111827]">Good Content</div>
+                  <p className="text-[11px] text-[#64748B]">Valuable, engaging, solution-oriented posts.</p>
+                </div>
+                <div className="p-2 rounded-lg bg-[#F3F7F5]">
+                  <div className="font-bold text-xs text-[#111827]">Happy Customers</div>
+                  <p className="text-[11px] text-[#64748B]">Satisfied followers who comment, save &amp; share.</p>
+                </div>
+                <div className="p-2 rounded-lg bg-[#F3F7F5]">
+                  <div className="font-bold text-xs text-[#111827]">Free Advertising</div>
+                  <p className="text-[11px] text-[#64748B]">Algorithms reward engagement with organic reach.</p>
+                </div>
+              </div>
+            </div>
+            <div className="pt-2 border-t border-slate-100 text-[11px] text-[#64748B]">
+              Good Content + Happy Followers = Inbound Growth.
+            </div>
+          </div>
+
+          {/* Module D */}
+          <div className="min-w-[82%] sm:min-w-[46%] md:min-w-0 snap-start bg-white p-4 rounded-2xl border border-[#E2E8F0] flex flex-col justify-between gap-3">
+            <div className="space-y-2.5">
+              <div>
+                <span className="text-[11px] font-semibold text-[#059669]">
+                  Module D · Commerce
+                </span>
+                <h4 className="text-sm sm:text-[15px] font-bold text-[#111827]">
+                  Social Media for Business
+                </h4>
+              </div>
+              <ul className="space-y-2 text-xs text-[#334155]">
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981] shrink-0 mt-0.5" />
                   <span>Works as your 24/7 online storefront</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                  <span>Display products and proof beautifully</span>
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981] shrink-0 mt-0.5" />
+                  <span>Displays products and social proof clearly</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                  <span>Build consistent, active brand credibility</span>
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981] shrink-0 mt-0.5" />
+                  <span>Builds consistent, active brand credibility</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                  <span>Convert engaged leads into paying clients</span>
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981] shrink-0 mt-0.5" />
+                  <span>Converts engaged leads into paying clients</span>
                 </li>
               </ul>
             </div>
-            <div className="pt-4 border-t border-slate-100 mt-4 text-[11px] text-slate-500">
-              Social platforms are always open to buyers worldwide.
+            <div className="pt-2 border-t border-slate-100 text-[11px] text-[#64748B]">
+              Always open to qualified buyers worldwide.
             </div>
           </div>
         </div>
 
         {/* SUBSECTION F & G: DO'S AND DON'TS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
           {/* The Do's */}
-          <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-3xl p-5 sm:p-6 space-y-4">
-            <div className="flex items-center gap-2 text-emerald-900 font-extrabold text-base">
-              <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+          <div className="bg-emerald-50/60 border border-emerald-200/80 rounded-2xl p-4 space-y-2.5">
+            <div className="flex items-center gap-1.5 text-emerald-950 font-bold text-sm">
+              <CheckCircle2 className="w-4 h-4 text-[#10B981] shrink-0" />
               <span>The Do&apos;s of Social Media (Module F)</span>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-emerald-950 font-medium">
+            <div className="grid grid-cols-2 gap-2 text-xs">
               {[
-                { title: 'Be Kind', desc: 'Maintain respect and professional dignity' },
-                { title: 'Post Regularly', desc: '3–5 times weekly as a consistent guide' },
-                { title: 'Use Quality Visuals', desc: 'Clear lighting and crisp typography' },
-                { title: 'Reply to Comments', desc: 'Foster two-way community connection' },
-                { title: 'Relevant Hashtags', desc: '5–15 niche-specific tags per post' },
-                { title: 'Be Yourself', desc: 'Authenticity builds lasting trust' },
+                { title: 'Be Kind', desc: 'Respect & dignity' },
+                { title: 'Post Regularly', desc: '3–5 times weekly' },
+                { title: 'Quality Visuals', desc: 'Clear lighting & type' },
+                { title: 'Reply Fast', desc: 'Two-way community' },
+                { title: 'Niche Hashtags', desc: '5–15 relevant tags' },
+                { title: 'Be Authentic', desc: 'Consistency builds trust' },
               ].map((item, idx) => (
-                <div key={idx} className="bg-white/80 p-3 rounded-xl border border-emerald-200/60 space-y-0.5">
-                  <div className="font-bold text-emerald-800">{item.title}</div>
-                  <div className="text-[11px] text-slate-600">{item.desc}</div>
+                <div key={idx} className="bg-white p-2.5 rounded-xl border border-emerald-200/60">
+                  <div className="font-bold text-[11px] text-emerald-900">{item.title}</div>
+                  <div className="text-[11px] text-[#64748B] truncate">{item.desc}</div>
                 </div>
               ))}
             </div>
           </div>
 
           {/* The Don'ts */}
-          <div className="bg-rose-50/70 border border-rose-200/80 rounded-3xl p-7 sm:p-8 space-y-4">
-            <div className="flex items-center gap-2 text-rose-900 font-extrabold text-base">
-              <XCircle className="w-5 h-5 text-rose-600" />
+          <div className="bg-rose-50/60 border border-rose-200/80 rounded-2xl p-4 space-y-2.5">
+            <div className="flex items-center gap-1.5 text-rose-950 font-bold text-sm">
+              <XCircle className="w-4 h-4 text-rose-600 shrink-0" />
               <span>The Don&apos;ts of Social Media (Module G)</span>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-rose-950 font-medium">
+            <div className="grid grid-cols-2 gap-2 text-xs">
               {[
-                { title: "Don't share personal details", desc: 'Safeguard private financial or client data' },
-                { title: "Don't copy content", desc: 'Plagiarism harms credibility and rankings' },
-                { title: "Don't buy fake followers", desc: 'Bots ruin your account engagement rate' },
-                { title: "Don't fight online", desc: 'Never argue with internet trolls' },
-                { title: "Don't spam DMs", desc: 'Avoid aggressive, unsolicited pitching' },
-                { title: "Don't post when angry", desc: 'Maintain composure and brand reputation' },
+                { title: "Don't overshare", desc: 'Guard private data' },
+                { title: "Don't copy", desc: 'Original work ranks' },
+                { title: "Don't buy bots", desc: 'Ruins engagement' },
+                { title: "Don't argue", desc: 'Avoid online trolls' },
+                { title: "Don't spam DMs", desc: 'No cold pitching' },
+                { title: "Don't rush posts", desc: 'Protect brand voice' },
               ].map((item, idx) => (
-                <div key={idx} className="bg-white/80 p-3 rounded-xl border border-rose-200/60 space-y-0.5">
-                  <div className="font-bold text-rose-800">{item.title}</div>
-                  <div className="text-[11px] text-slate-600">{item.desc}</div>
+                <div key={idx} className="bg-white p-2.5 rounded-xl border border-rose-200/60">
+                  <div className="font-bold text-[11px] text-rose-900">{item.title}</div>
+                  <div className="text-[11px] text-[#64748B] truncate">{item.desc}</div>
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        {/* SUBSECTION K: TURNING FOLLOWERS INTO PAYING CUSTOMERS (INTERACTIVE FUNNEL) */}
-        <div className="bg-slate-900 text-white rounded-3xl p-5 sm:p-7 space-y-5">
-          <div className="max-w-2xl">
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
-              Module K &bull; The Conversion Engine
-            </span>
-            <h3 className="text-2xl font-bold mt-1">
-              Turning Followers Into Paying Customers
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-400 mt-2">
-              The 7-step psychological progression that transforms passive social attention into closed revenue:
+        {/* SUBSECTION K: TURNING FOLLOWERS INTO PAYING CUSTOMERS */}
+        <div className="bg-[#111827] text-white rounded-2xl p-4 sm:p-5 space-y-3">
+          <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+            <div>
+              <span className="text-[11px] font-semibold text-emerald-400">
+                Module K · The Conversion Engine
+              </span>
+              <h3 className="text-base sm:text-lg font-bold text-white">
+                Turning Followers Into Paying Customers
+              </h3>
+            </div>
+            <p className="text-[11px] text-slate-400">
+              7-step progression from passive attention to repeat buyer
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-3 pt-2">
+          <div className="flex lg:grid lg:grid-cols-7 gap-2 overflow-x-auto no-scrollbar pb-0.5">
             {[
-              { step: '1', title: 'Reel/Post', action: 'Captures Attention' },
-              { step: '2', title: 'Like/Save', action: 'Shows Interest' },
-              { step: '3', title: 'Profile Visit', action: 'Explores Offer' },
-              { step: '4', title: 'Follow', action: 'Commits to Brand' },
-              { step: '5', title: 'Stories', action: 'Deepens Trust' },
-              { step: '6', title: 'Direct Offer', action: 'Solves Pain Point' },
-              { step: '7', title: 'Sale Done', action: 'Repeat Customer' },
+              { step: '1', title: 'Reel/Post', action: 'Attention' },
+              { step: '2', title: 'Like/Save', action: 'Interest' },
+              { step: '3', title: 'Profile Visit', action: 'Explores' },
+              { step: '4', title: 'Follow', action: 'Commits' },
+              { step: '5', title: 'Stories', action: 'Trust' },
+              { step: '6', title: 'Direct Offer', action: 'Solution' },
+              { step: '7', title: 'Sale Done', action: 'Repeat Client' },
             ].map((f, i) => (
               <div
                 key={i}
-                className="bg-slate-800/80 p-3.5 rounded-2xl border border-slate-700/70 text-center space-y-1"
+                className="min-w-[110px] lg:min-w-0 bg-slate-800/80 px-2.5 py-2.5 rounded-xl border border-slate-700/70 text-center space-y-0.5 shrink-0"
               >
-                <span className="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 font-bold text-xs inline-flex items-center justify-center">
-                  {f.step}
-                </span>
-                <div className="font-bold text-xs text-white">{f.title}</div>
-                <div className="text-[11px] text-emerald-400">{f.action}</div>
+                <div className="text-[10px] font-bold text-emerald-400 tabular-nums">
+                  0{f.step}
+                </div>
+                <div className="font-bold text-xs text-white truncate">{f.title}</div>
+                <div className="text-[10px] text-slate-300 truncate">{f.action}</div>
               </div>
             ))}
           </div>

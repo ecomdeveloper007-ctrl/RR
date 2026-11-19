@@ -40,7 +40,7 @@ export const AboutSection: React.FC = () => {
         {/* Compact Full-Width Section Header */}
         <div className="w-full space-y-1.5 mb-5 sm:mb-6">
           <div className="flex items-center gap-2 text-xs font-semibold text-[#059669]">
-            <span>About PJ</span>
+            <span>About Patricia</span>
             <span aria-hidden="true" className="text-slate-400">·</span>
             <span className="text-[#64748B] font-medium">Philosophy &amp; Approach</span>
           </div>
